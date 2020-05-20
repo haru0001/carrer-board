@@ -18,5 +18,6 @@
     <h2>iiii</h2>
     <h2>iiii</h2><h2>iiii</h2><h2>iiii</h2><h2>iiii</h2><h2>iiii</h2>
     <h4>いいい</h4><h4>いいい</h4><h4>いいい</h4><h4>いいい</h4>
+    <h2>コメが美味しいです。</h2>
 </body>
 </html>
