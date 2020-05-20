@@ -41,6 +41,5 @@ services:
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
       - TZ=${TZ}
-
 volumes:
   db-store:
