@@ -15,6 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('aaa', function () {
-    return view('index');
+Route::get('/sample', function () {
+    return view('sample');
 });
