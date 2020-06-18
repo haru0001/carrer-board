@@ -35,3 +35,6 @@ docker-compose stop
 
 - コンテナ削除
 docker-compose down
+
+- コンテナの中に入る
+docker-compose exec app ash
