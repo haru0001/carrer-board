@@ -39,7 +39,7 @@
     </table>
 
     <!-- ★STEP6 -->
-    <h2>新しい作業の追加</h2>
+    <h2>新しい作業の追加asdfasdf</h2>
     <form class="add-form" v-on:submit.prevent="doAdd">
       <!-- コメント入力フォーム -->
       コメント
