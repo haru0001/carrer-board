@@ -2068,6 +2068,7 @@ var todoStorage = {
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserComponent.vue?vue&type=script&lang=js& ***!
@@ -2300,6 +2301,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+=======
+>>>>>>> master
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TodoComponent.vue?vue&type=style&index=0&lang=css&":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TodoComponent.vue?vue&type=style&index=0&lang=css& ***!
@@ -20529,6 +20532,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SubComponent.vue?vue&type=template&id=465337f0&":
 /*!***************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SubComponent.vue?vue&type=template&id=465337f0& ***!
@@ -20563,6 +20567,8 @@ render._withStripped = true
 
 /***/ }),
 
+=======
+>>>>>>> master
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TodoComponent.vue?vue&type=template&id=2bd14908&":
 /*!****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TodoComponent.vue?vue&type=template&id=2bd14908& ***!
@@ -20659,7 +20665,11 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
+<<<<<<< HEAD
         _c("h2", [_vm._v("新しい作業の追加")]),
+=======
+        _c("h2", [_vm._v("新しい作業の追加asdfasdf")]),
+>>>>>>> master
         _vm._v(" "),
         _c(
           "form",
@@ -36460,6 +36470,7 @@ var script = {}
 
 /* normalize component */
 
+<<<<<<< HEAD
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
   script,
   _TopComponent_vue_vue_type_template_id_053669da___WEBPACK_IMPORTED_MODULE_0__["render"],
@@ -36475,6 +36486,15 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 if (false) { var api; }
 component.options.__file = "resources/js/components/TopComponent.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+=======
+__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
+window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+Vue.component('todo-component', __webpack_require__(/*! ./components/TodoComponent.vue */ "./resources/js/components/TodoComponent.vue")["default"]);
+var app = new Vue({
+  el: '#app'
+});
+>>>>>>> master
 
 /***/ }),
 
@@ -36496,6 +36516,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./resources/js/components/UserComponent.vue":
 /*!***************************************************!*\
   !*** ./resources/js/components/UserComponent.vue ***!
@@ -36675,6 +36696,12 @@ component.options.__file = "resources/js/components/UserDetailComponent.vue"
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/UserDetailComponent.vue?vue&type=script&lang=js& ***!
   \**********************************************************************************/
+=======
+/***/ "./resources/js/components/TodoComponent.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/TodoComponent.vue ***!
+  \***************************************************/
+>>>>>>> master
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -36850,8 +36877,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/kanajiharuka/app/career-board/src/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/kanajiharuka/app/career-board/src/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/carrer-board/src/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/carrer-board/src/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
