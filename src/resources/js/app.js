@@ -1,10 +1,13 @@
-
 require('./bootstrap');
 
-window.Vue = require('vue');
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import router from './route.js';
 
-Vue.component('todo-component', require('./components/TodoComponent.vue').default);
+window.Vue = Vue;
+Vue.use(VueRouter);
 
 const app = new Vue({
-  el: '#app'
-})
+  router,
+  el: '#app',
+});

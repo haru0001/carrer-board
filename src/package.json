@@ -27,7 +27,9 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {},
+  "dependencies": {
+    "vue-router": "^3.3.2"
+  },
   "author": "",
   "license": "ISC"
 }
