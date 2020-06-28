@@ -28,7 +28,8 @@
     "test": "tests"
   },
   "dependencies": {
-    "vue-router": "^3.3.2"
+    "vue-router": "^3.3.2",
+    "vue-simple-suggest": "^1.10.1"
   },
   "author": "",
   "license": "ISC"

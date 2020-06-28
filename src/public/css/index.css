@@ -1,0 +1,15 @@
+
+*{
+    box-sizing: border-box;
+}
+
+
+#contents-wrapper{
+    width: 60%;
+    display: inline-block;
+    margin: 5% 20%;
+    /* background-color: lightcyan; */
+
+}
+
+
