@@ -3,11 +3,12 @@
     <h1>ユーザ一覧</h1>
     <router-link :to="`/user/create`">作成</router-link>
     <ul>
-      <li v-for="user in users" v-bind:key="user.id">
+      <li v-for="(user,index) in users" v-bind:key="user.id">
         {{ user.name}}
         <router-link :to="`/user/${user.id}`">詳細</router-link>
         <router-link :to="`/user/${user.id}/edit`">更新</router-link>
-        <span class="btn btn-danger" @click="userDelete(index, user.id)">削除</span>
+        <!-- <router-link :to="`/user`" class="btn btn-danger" @click="userDelete(index,user.id)">削除</router-link> -->
+        <span class="btn btn-danger" @click="userDelete(index,user.id)">削除</span>
       </li>
     </ul>
   </div>
@@ -21,16 +22,21 @@ export default {
     };
   },
   methods: {
-    userDelete(index, id) {
+    userDelete(index,id) {
       axios
         .delete("/api/user/" + id)
         .then(response => {
-          this.users.slice(id, 1);
+          this.users.slice(id,1);
+          
+          // console.log(index + ":" + id);
         })
         .catch(error => console.log(error));
+
+        
     }
   },
   created() {
+    
     axios
       .get("/api/user")
       .then(response => {

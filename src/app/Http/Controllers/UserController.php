@@ -32,7 +32,7 @@ class UserController extends Controller
         $user->update($request->user);
         return response()->json(['user' => $user]);
     }
-１
+  
     public function userDelete(User $user)
     {
         $user->delete();
