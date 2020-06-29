@@ -11,7 +11,6 @@
 docker-compose up -d --build
 docker-compose exec app ash
 composer install
-npm install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate

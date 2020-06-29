@@ -2437,6 +2437,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -20864,313 +20866,387 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", [
-      _c("form", [
-        _c("div", { staticClass: "form-row" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "user-form-right" }, [
-            _c("label", { attrs: { for: "inputEmail4" } }, [
-              _vm._v("アイコン")
-            ]),
-            _vm._v(" "),
-            _c("img", {
-              attrs: { src: "/image/face2.jpg", alt: "", id: "user-image" }
-            }),
-            _vm._v(" "),
-            _c("div", { attrs: { id: "upload-image-btn-wrapper" } })
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "vue-simple-suggest-wrapper" },
-          [
-            _c(
-              "vue-simple-suggest",
-              {
-                staticClass: "vue-simple-suggest-form",
-                attrs: {
-                  "min-length": 2,
-                  list: _vm.simpleSuggestionList,
-                  "filter-by-query": true,
-                  "aria-autocomplete": "off"
-                },
-                on: { "suggestion-click": _vm.creatSearchTag },
-                model: {
-                  value: _vm.selected,
-                  callback: function($$v) {
-                    _vm.selected = $$v
-                  },
-                  expression: "selected"
-                }
-              },
-              [
-                _c("div", { staticClass: "input-group mb-3" }, [
-                  _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.createUser($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-row" }, [
+            _c("div", { staticClass: "user-form-left" }, [
+              _c("div", { staticClass: "user-form-left-top" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group", attrs: { id: "name-form" } },
+                  [
+                    _c("label", { attrs: { for: "name" } }, [_vm._v("氏名")]),
+                    _vm._v(" "),
                     _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.user.name,
+                          expression: "user.name"
+                        }
+                      ],
                       staticClass: "form-control",
-                      attrs: {
-                        type: "text",
-                        placeholder: "Search",
-                        "aria-label": "Recipient's username",
-                        "aria-describedby": "button-addon2",
-                        id: "carrerSearchForm",
-                        autocomplete: "off"
+                      attrs: { type: "text", placeholder: "氏名" },
+                      domProps: { value: _vm.user.name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.user, "name", $event.target.value)
+                        }
                       }
                     })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { attrs: { id: "skillLevelWrapper" } }, [
-                    _c("fieldset", [
-                      _c("input", {
-                        staticClass: "radio-inline__input btn-outline-primary",
-                        attrs: {
-                          id: "item-1",
-                          type: "radio",
-                          name: "accessible-radio",
-                          value: "item-1",
-                          checked: "checked"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "radio-inline__label",
-                          attrs: { for: "item-1" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                      1\n                  "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "radio-inline__input",
-                        attrs: {
-                          id: "item-2",
-                          type: "radio",
-                          name: "accessible-radio",
-                          value: "item-2"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "radio-inline__label",
-                          attrs: { for: "item-2" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                      2\n                  "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "radio-inline__input",
-                        attrs: {
-                          id: "item-3",
-                          type: "radio",
-                          name: "accessible-radio",
-                          value: "item-3"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "radio-inline__label",
-                          attrs: { for: "item-3" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                      3\n                  "
-                          )
-                        ]
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "input-group-append" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-outline-secondary btn-info",
-                        attrs: { type: "button", id: "button-addon2" },
-                        on: { click: _vm.addSearchTag }
-                      },
-                      [_vm._v("追加")]
-                    )
-                  ])
-                ])
-              ]
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          [
-            _c(
-              "transition-group",
-              { attrs: { name: "list", tag: "p" } },
-              _vm._l(_vm.searchWordLists, function(searchWordList, index) {
-                return _c(
-                  "span",
-                  { key: searchWordList, staticClass: "list-item" },
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-group col-md-4",
+                    attrs: { id: "se-career-form" }
+                  },
                   [
+                    _c("label", { attrs: { for: "se_career" } }, [
+                      _vm._v("エンジニア歴")
+                    ]),
+                    _vm._v(" "),
                     _c(
-                      "button",
+                      "select",
                       {
-                        staticClass: "close",
-                        attrs: { type: "button", "aria-label": "Close" },
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.user.se_career,
+                            expression: "user.se_career"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        staticStyle: { width: "128%" },
                         on: {
-                          click: function($event) {
-                            return _vm.searchWordLists.splice(index, 1)
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.user,
+                              "se_career",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
                           }
                         }
                       },
                       [
-                        _c(
-                          "svg",
-                          {
-                            staticClass: "bi bi-x-circle hama-close",
-                            attrs: {
-                              width: "1em",
-                              height: "1em",
-                              viewBox: "0 0 16 16",
-                              fill: "currentColor",
-                              xmlns: "http://www.w3.org/2000/svg"
-                            }
-                          },
-                          [
-                            _c("path", {
-                              attrs: {
-                                "fill-rule": "evenodd",
-                                d:
-                                  "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("path", {
-                              attrs: {
-                                "fill-rule": "evenodd",
-                                d:
-                                  "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("path", {
-                              attrs: {
-                                "fill-rule": "evenodd",
-                                d:
-                                  "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
-                              }
-                            })
-                          ]
-                        )
+                        _c("option", { attrs: { selected: "" } }, [
+                          _vm._v("Choose...")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "1" } }, [_vm._v("1")]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "2" } }, [_vm._v("2")]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "3" } }, [_vm._v("3")]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "4" } }, [_vm._v("4")]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "5" } }, [_vm._v("5")]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "6" } }, [
+                          _vm._v("6~10")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "7" } }, [_vm._v("10~")])
                       ]
-                    ),
-                    _vm._v(
-                      "\n          " + _vm._s(searchWordList) + "\n          "
                     )
                   ]
                 )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "form-group",
+                  attrs: { id: "introduction-form" }
+                },
+                [
+                  _c("label", { attrs: { for: "introduction" } }, [
+                    _vm._v("自己紹介")
+                  ]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.user.introduction,
+                        expression: "user.introduction"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      rows: "4",
+                      placeholder:
+                        "（例）フロントエンドが得意です。最近はAWSの勉強をはじめました。"
+                    },
+                    domProps: { value: _vm.user.introduction },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.user, "introduction", $event.target.value)
+                      }
+                    }
+                  })
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "user-form-right" }, [
+              _c("label", { attrs: { for: "inputEmail4" } }, [
+                _vm._v("アイコン")
+              ]),
+              _vm._v(" "),
+              _c("img", {
+                attrs: { src: "/image/face2.jpg", alt: "", id: "user-image" }
               }),
-              0
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _vm._m(1)
-      ])
+              _vm._v(" "),
+              _c("div", { attrs: { id: "upload-image-btn-wrapper" } })
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "vue-simple-suggest-wrapper" },
+            [
+              _c(
+                "vue-simple-suggest",
+                {
+                  staticClass: "vue-simple-suggest-form",
+                  attrs: {
+                    "min-length": 2,
+                    list: _vm.simpleSuggestionList,
+                    "filter-by-query": true,
+                    "aria-autocomplete": "off"
+                  },
+                  on: { "suggestion-click": _vm.creatSearchTag },
+                  model: {
+                    value: _vm.selected,
+                    callback: function($$v) {
+                      _vm.selected = $$v
+                    },
+                    expression: "selected"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "input-group mb-3" }, [
+                    _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
+                      _c("input", {
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          placeholder: "Search",
+                          "aria-label": "Recipient's username",
+                          "aria-describedby": "button-addon2",
+                          id: "carrerSearchForm",
+                          autocomplete: "off"
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { attrs: { id: "skillLevelWrapper" } }, [
+                      _c("fieldset", [
+                        _c("input", {
+                          staticClass:
+                            "radio-inline__input btn-outline-primary",
+                          attrs: {
+                            id: "item-1",
+                            type: "radio",
+                            name: "accessible-radio",
+                            value: "item-1",
+                            checked: "checked"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "radio-inline__label",
+                            attrs: { for: "item-1" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                      1\n                  "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          staticClass: "radio-inline__input",
+                          attrs: {
+                            id: "item-2",
+                            type: "radio",
+                            name: "accessible-radio",
+                            value: "item-2"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "radio-inline__label",
+                            attrs: { for: "item-2" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                      2\n                  "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          staticClass: "radio-inline__input",
+                          attrs: {
+                            id: "item-3",
+                            type: "radio",
+                            name: "accessible-radio",
+                            value: "item-3"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "radio-inline__label",
+                            attrs: { for: "item-3" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                      3\n                  "
+                            )
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-group-append" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-secondary btn-info",
+                          attrs: { type: "button", id: "button-addon2" },
+                          on: { click: _vm.addSearchTag }
+                        },
+                        [_vm._v("追加")]
+                      )
+                    ])
+                  ])
+                ]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c(
+                "transition-group",
+                { attrs: { name: "list", tag: "p" } },
+                _vm._l(_vm.searchWordLists, function(searchWordList, index) {
+                  return _c(
+                    "span",
+                    { key: searchWordList, staticClass: "list-item" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "close",
+                          attrs: { type: "button", "aria-label": "Close" },
+                          on: {
+                            click: function($event) {
+                              return _vm.searchWordLists.splice(index, 1)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "svg",
+                            {
+                              staticClass: "bi bi-x-circle hama-close",
+                              attrs: {
+                                width: "1em",
+                                height: "1em",
+                                viewBox: "0 0 16 16",
+                                fill: "currentColor",
+                                xmlns: "http://www.w3.org/2000/svg"
+                              }
+                            },
+                            [
+                              _c("path", {
+                                attrs: {
+                                  "fill-rule": "evenodd",
+                                  d:
+                                    "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("path", {
+                                attrs: {
+                                  "fill-rule": "evenodd",
+                                  d:
+                                    "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("path", {
+                                attrs: {
+                                  "fill-rule": "evenodd",
+                                  d:
+                                    "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
+                                }
+                              })
+                            ]
+                          )
+                        ]
+                      ),
+                      _vm._v(
+                        "\n          " + _vm._s(searchWordList) + "\n          "
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm._m(0)
+        ]
+      )
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "user-form-left" }, [
-      _c("div", { staticClass: "user-form-left-top" }, [
-        _c("div", { staticClass: "form-group", attrs: { id: "name-form" } }, [
-          _c("label", { attrs: { for: "inputEmail4" } }, [_vm._v("氏名")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "inputEmail4", placeholder: "氏名" }
-          })
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "form-group col-md-4",
-            attrs: { id: "se-career-form" }
-          },
-          [
-            _c("label", { attrs: { for: "inputState" } }, [
-              _vm._v("エンジニア歴")
-            ]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                staticClass: "form-control",
-                staticStyle: { width: "128%" },
-                attrs: { id: "inputState" }
-              },
-              [
-                _c("option", { attrs: { selected: "" } }, [
-                  _vm._v("Choose...")
-                ]),
-                _vm._v(" "),
-                _c("option", [_vm._v("1")]),
-                _vm._v(" "),
-                _c("option", [_vm._v("2")]),
-                _vm._v(" "),
-                _c("option", [_vm._v("3")]),
-                _vm._v(" "),
-                _c("option", [_vm._v("4")]),
-                _vm._v(" "),
-                _c("option", [_vm._v("5")]),
-                _vm._v(" "),
-                _c("option", [_vm._v("6~10")]),
-                _vm._v(" "),
-                _c("option", [_vm._v("10~")])
-              ]
-            )
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "form-group", attrs: { id: "introduction-form" } },
-        [
-          _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
-            _vm._v("自己紹介")
-          ]),
-          _vm._v(" "),
-          _c("textarea", {
-            staticClass: "form-control",
-            attrs: {
-              id: "exampleFormControlTextarea1",
-              rows: "4",
-              placeholder:
-                "（例）フロントエンドが得意です。最近はAWSの勉強をはじめました。"
-            }
-          })
-        ]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -21217,7 +21293,13 @@ var render = function() {
         _vm._v(" "),
         _c("li", [_vm._v("User Name: " + _vm._s(_vm.user.name))]),
         _vm._v(" "),
-        _c("li", [_vm._v("User Email: " + _vm._s(_vm.user.email))])
+        _c("li", [_vm._v("User Email: " + _vm._s(_vm.user.email))]),
+        _vm._v(" "),
+        _c("li", [_vm._v("User se_career: " + _vm._s(_vm.user.se_career))]),
+        _vm._v(" "),
+        _c("li", [
+          _vm._v("User introduction: " + _vm._s(_vm.user.introduction))
+        ])
       ])
     ])
   ])
@@ -37634,8 +37716,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/career-board/src/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/career-board/src/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /work/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /work/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

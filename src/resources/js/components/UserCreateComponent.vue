@@ -28,35 +28,35 @@
         </div>
         <div class="form-group">
           <label for="img_path"></label>
-          <input v-model="user.introduction" />
+          <input v-model="user.img_path" />
         </div>
         <button type="submit">作成</button>
       </form> -->
 
-      <form>
+      <form @submit.prevent="createUser">
         <div class="form-row">
           <div class="user-form-left">
 
             <div class="user-form-left-top">
                 <!-- 氏名フォーム -->
                 <div class="form-group" id="name-form">
-                  <label for="inputEmail4">氏名</label>
-                  <input type="text" class="form-control" id="inputEmail4" placeholder="氏名">
+                  <label for="name">氏名</label>
+                  <input v-model="user.name" type="text" class="form-control" placeholder="氏名">
                 </div>
 
                 <!-- エンジニア歴フォーム -->
                 <div class="form-group col-md-4" id="se-career-form">
-                  <label for="inputState">エンジニア歴</label>
-                  <select id="inputState" class="form-control" style="width:128%;">
+                  <label for="se_career">エンジニア歴</label>
+                  <select v-model="user.se_career" class="form-control" style="width:128%;">
                     <!-- TODO エンジニア歴はどれくらいの区切りを設けるか？ -->
                     <option selected>Choose...</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6~10</option>
-                    <option>10~</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6~10</option>
+                    <option value="7">10~</option>
                   </select>
                 </div>
 
@@ -64,8 +64,8 @@
 
               <!-- 自己紹介フォーム -->
               <div class="form-group" id="introduction-form">
-                <label for="exampleFormControlTextarea1">自己紹介</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="（例）フロントエンドが得意です。最近はAWSの勉強をはじめました。"></textarea>
+                <label for="introduction">自己紹介</label>
+                <textarea v-model="user.introduction" class="form-control" rows="4" placeholder="（例）フロントエンドが得意です。最近はAWSの勉強をはじめました。"></textarea>
               </div>
 
           </div>
