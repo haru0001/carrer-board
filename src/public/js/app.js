@@ -20959,19 +20959,21 @@ var render = function() {
                           _vm._v("Choose...")
                         ]),
                         _vm._v(" "),
-                        _c("option", [_vm._v("1")]),
+                        _c("option", { attrs: { value: "1" } }, [_vm._v("1")]),
                         _vm._v(" "),
-                        _c("option", [_vm._v("2")]),
+                        _c("option", { attrs: { value: "2" } }, [_vm._v("2")]),
                         _vm._v(" "),
-                        _c("option", [_vm._v("3")]),
+                        _c("option", { attrs: { value: "3" } }, [_vm._v("3")]),
                         _vm._v(" "),
-                        _c("option", [_vm._v("4")]),
+                        _c("option", { attrs: { value: "4" } }, [_vm._v("4")]),
                         _vm._v(" "),
-                        _c("option", [_vm._v("5")]),
+                        _c("option", { attrs: { value: "5" } }, [_vm._v("5")]),
                         _vm._v(" "),
-                        _c("option", [_vm._v("6~10")]),
+                        _c("option", { attrs: { value: "6" } }, [
+                          _vm._v("6~10")
+                        ]),
                         _vm._v(" "),
-                        _c("option", [_vm._v("10~")])
+                        _c("option", { attrs: { value: "7" } }, [_vm._v("10~")])
                       ]
                     )
                   ]
