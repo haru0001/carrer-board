@@ -38,3 +38,6 @@ docker-compose down
 
 - コンテナの中に入る
 docker-compose exec app ash
+
+- データベースのアクセス
+docker-compose exec db bash -c 'mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}'
