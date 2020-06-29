@@ -6,6 +6,8 @@
         <li>User Id: {{ user.id }}</li>
         <li>User Name: {{ user.name }}</li>
         <li>User Email: {{ user.email }}</li>
+        <li>User se_career: {{ user.se_career }}</li>
+        <li>User introduction: {{ user.introduction }}</li>
       </ul>
     </div>
   </div>
