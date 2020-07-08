@@ -8,6 +8,7 @@
         <li>User Email: {{ user.email }}</li>
         <li>User se_career: {{ user.se_career }}</li>
         <li>User introduction: {{ user.introduction }}</li>
+        <li>User img_path: {{ user.img_path }}</li>
       </ul>
     </div>
   </div>

@@ -2357,6 +2357,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2370,7 +2371,8 @@ __webpack_require__.r(__webpack_exports__);
         email: "",
         password: "",
         se_career: "",
-        introduction: ""
+        introduction: "",
+        img_path: ""
       },
       selected: null,
       simpleSuggestionList: ['Java', 'PHP', 'JavaScript', 'C++', 'Ruby', 'Swift', 'JavaEE', 'JDK', 'VSCode', 'object-c', 'TypeScript', 'Docker', 'GitHub', 'AWS', 'ER図', 'Python', 'Azure', 'aaa'],
@@ -2382,20 +2384,30 @@ __webpack_require__.r(__webpack_exports__);
     createUser: function createUser() {
       var _this = this;
 
-      axios.post("/api/user", {
-        user: this.user
-      }).then(function (response) {
-        _this.user = response.data.user;
+      var formData = new FormData();
+      formData.append('img_path', this.user.img_path);
+      formData.append('name', this.user.name);
+      formData.append('se_career', this.user.se_career);
+      formData.append('introduction', this.user.introduction);
+      formData.append('email', this.user.email);
+      formData.append('password', this.user.password); // axios.post('/api/user',formData).then(response =>{
+      //     console.log(response)
+      // });
 
-        _this.$router.push({
-          name: "user"
-        });
+      axios.post("/api/user", formData).then(function (response) {
+        console.log(response.data.success);
+        _this.img_path = "";
+        _this.name = "";
+        _this.se_career = "";
+        _this.introduction = "";
+        _this.email = "";
+        _this.password = "";
       })["catch"](function (error) {
         return console.log(error);
       });
     },
-    uploadImage: function uploadImage() {
-      alert("プロフィール画像をアップロード");
+    imageSelect: function imageSelect(event) {
+      this.user.img_path = event.target.files[0];
     },
     addSearchTag: function addSearchTag() {
       // タグ検索フォームを空にする
@@ -2424,6 +2436,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -2563,7 +2576,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-46aa920a]{\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-46aa920a]{\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-46aa920a]{\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-46aa920a]{\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-46aa920a]{\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-46aa920a]{\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-46aa920a]{\n  width: 94%;\n  height: 82%;\n  margin: 1% 3% 0 3%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a]{\n  text-align: center;\n}\n#upload-image-btn[data-v-46aa920a]{\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-46aa920a]{\n    width: 40%;\n    height: 100%;\n    margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-46aa920a]{\n    display: inline-block;\n    width: 70%;\n    height: 100%;\n}\n#result-list-wrapper[data-v-46aa920a]{\n    display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-46aa920a] {\n  -webkit-animation: bounce-in-data-v-46aa920a .5s;\n          animation: bounce-in-data-v-46aa920a .5s;\n}\n.bounce-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-46aa920a]{\n    width: 100%;\n}\n.selected-tag-with-anime[data-v-46aa920a]{\n    display: inline-block;\n    width:600px;\n    padding: 20px;\n    font-size: 160%;\n    background-color: red;\n    border-radius: 15px;\n}\n.list-item[data-v-46aa920a] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font:bold;\n  padding: 10px 25px;\n  background-color: lightcyan;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-46aa920a] :hover{\nbackground-color: aqua;\n}\n.close[data-v-46aa920a]{\n    position: absolute;\n    right: -12px;\n    top: -12px;\n    opacity: 0.2;\n    -webkit-animation: all 5s;\n            animation: all 5s;\n}\n.hama-close[data-v-46aa920a]{\n    font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-46aa920a]{\nwidth:300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a]{\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a]{\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-46aa920a]{\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-46aa920a]{\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-46aa920a .5s;\n          animation: bounce-in-data-v-46aa920a .5s;\n}\n.list-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a .5s reverse;\n}\n.list-enter[data-v-46aa920a], .list-leave-to[data-v-46aa920a] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-46aa920a]{\n  display: inline-block;\n  width: 20%;\n  margin: 0 5% 0 10%;\n}\nfieldset[data-v-46aa920a] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\n  margin: 0 5px;\n    clip: rect(1px, 1px, 1px, 1px);\n    position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n    display: inline-block;\n    padding: 0.5rem 1rem;\n    margin-right: 1px;\n    border-radius: 3px;\n    transition: all .2s;\n    background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-46aa920a] {\n    background: #FF8856;\n    color: #fff;\n    text-shadow: 0 0 1px rgba(0,0,0,.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n    outline-color: #4D90FE;\n    outline-offset: -2px;\n    outline-style: auto;\n    outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a]{\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a]{\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 72%;\n}\n.user-form-left-top[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 100%;\n}\n#name-form[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 60%;\n}\n#se-career-form[data-v-46aa920a]{\ndisplay: inline-block;\n/* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n/* width: 50%; */\n}\n#introduction-form[data-v-46aa920a]{\ndisplay: inline-block;\nmargin-top: 3%;\nwidth: 100%;\n}\n.user-form-right[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 23%;\nmargin-left: 3%;\n}\n#user-image[data-v-46aa920a]{\nwidth: 94%;\npadding: 1%;\nborder: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a]{\ntext-align: center;\n}\n#upload-image-btn[data-v-46aa920a]{\nwidth: 70%;\nmargin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-46aa920a]{\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-46aa920a]{\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-46aa920a]{\n  display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-46aa920a] {\n-webkit-animation: bounce-in-data-v-46aa920a .5s;\n        animation: bounce-in-data-v-46aa920a .5s;\n}\n.bounce-leave-active[data-v-46aa920a] {\nanimation: bounce-in-data-v-46aa920a .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-46aa920a]{\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-46aa920a]{\n  display: inline-block;\n  width:600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-46aa920a] {\ndisplay: inline-block;\nposition: relative;\nfont-size: 200%;\nfont:bold;\npadding: 10px 25px;\nbackground-color: lightcyan;\nmargin-right: 35px;\nborder-radius: 10px;\n}\n.list-item[data-v-46aa920a] :hover{\nbackground-color: aqua;\n}\n.close[data-v-46aa920a]{\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-46aa920a]{\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-46aa920a]{\nwidth:300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a]{\ndisplay: inline-block;\nmargin: 0 5%;\nwidth: 10%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 40%;\n}\n#button-addon2[data-v-46aa920a]{\ndisplay: inline-block;\ncolor: aliceblue;\nfont: bolder;\nbackground: green;\n}\n.list-enter-active[data-v-46aa920a]{\n/* transition: all 1s; */\n-webkit-animation: bounce-in-data-v-46aa920a .5s;\n        animation: bounce-in-data-v-46aa920a .5s;\n}\n.list-leave-active[data-v-46aa920a] {\nanimation: bounce-in-data-v-46aa920a .5s reverse;\n}\n.list-enter[data-v-46aa920a], .list-leave-to[data-v-46aa920a] /* .list-leave-active for below version 2.1.8 */ {\nopacity: 0;\ntransform: translateY(30px);\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 20%;\nmargin: 0 5% 0 10%;\n}\nfieldset[data-v-46aa920a] {\ndisplay: inline-block;\nborder: none;\ntext-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\nmargin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all .2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-46aa920a] {\n  background: #FF8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0,0,0,.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n  outline-color: #4D90FE;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a]{\ntext-align: center;\nmargin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 20%;\nfont-size: 130%;\n}\n\n\n", ""]);
 
 // exports
 
@@ -21029,7 +21042,16 @@ var render = function() {
                 attrs: { src: "/image/face2.jpg", alt: "", id: "user-image" }
               }),
               _vm._v(" "),
-              _c("div", { attrs: { id: "upload-image-btn-wrapper" } })
+              _c("div", { attrs: { id: "upload-image-btn-wrapper" } }, [
+                _c("div", { staticClass: "content" }, [
+                  _c("p", [
+                    _c("input", {
+                      attrs: { type: "file" },
+                      on: { change: _vm.imageSelect }
+                    })
+                  ])
+                ])
+              ])
             ])
           ]),
           _vm._v(" "),
@@ -21299,7 +21321,9 @@ var render = function() {
         _vm._v(" "),
         _c("li", [
           _vm._v("User introduction: " + _vm._s(_vm.user.introduction))
-        ])
+        ]),
+        _vm._v(" "),
+        _c("li", [_vm._v("User img_path: " + _vm._s(_vm.user.img_path))])
       ])
     ])
   ])
