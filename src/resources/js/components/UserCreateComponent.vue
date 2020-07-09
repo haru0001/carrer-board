@@ -1,38 +1,6 @@
 <template>
 <div>
   <div>
-    <!-- <h1>ユーザー作成</h1> -->
-
-
-    <!-- 新規登録画面の導入に伴い、初期の登録画面をコメントアウト TODO→新規登録画面にVue機能を移植する必要がある。
-    <form @submit.prevent="createUser">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input v-model="user.name" />
-      </div>
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input v-model="user.email" />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" v-model="user.password" />
-      </div>
-      <div class="form-group">
-        <label for="se_career">キャリア:</label>
-        <input v-model="user.se_career" />
-      </div>
-      <div class="form-group">
-        <label for="introduction">自己紹介</label>
-        <input v-model="user.introduction" />
-      </div>
-      <div class="form-group">
-        <label for="img_path"></label>
-        <input v-model="user.img_path" />
-      </div>
-      <button type="submit">作成</button>
-    </form> -->
-
     <form @submit.prevent="createUser">
       <div class="form-row">
         <div class="user-form-left">
@@ -439,6 +407,8 @@ methods: {
         this.introduction = "";
         this.email = "";
         this.password = "";
+
+        alert("登録しました");
       })
       .catch(error => console.log(error));
   },

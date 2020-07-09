@@ -3,6 +3,7 @@ import UserComponent from './components/UserComponent.vue'
 import UserDetailComponent from './components/UserDetailComponent.vue'
 import UserEditComponent from './components/UserEditComponent.vue'
 import UserCreateComponent from './components/UserCreateComponent.vue'
+import SearchComponent from './components/SearchComponent.vue'
 
 export default new Router({
   mode: 'history',
@@ -26,6 +27,11 @@ export default new Router({
       path: '/user/:id/edit',
       name: 'user_edit',
       component: UserEditComponent
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchComponent
     },
 
   ]
