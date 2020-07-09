@@ -16,6 +16,9 @@
 </head>
 <body>
   <div id="app">
+    
+    <header-component></header-component>
+
     <div id="contents-wrapper">
       <router-view/>
     </div>
