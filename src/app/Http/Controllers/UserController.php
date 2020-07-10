@@ -52,5 +52,13 @@ class UserController extends Controller
     {
         $user->delete();
         return response()->json(['message' => 'delete successfully']);
-    }      
+    }
+
+    //検索画面を訪れた際は全てのユーザーを表示する
+    public function showAllUsers()
+    {
+
+        return User::select('id', 'name', 'se_career', 'introduction', 'img_path')->get();
+
+    }
 }
