@@ -2267,6 +2267,9 @@ __webpack_require__.r(__webpack_exports__);
       axios["delete"]("/api/user/" + id).then(function (response) {
         _this.users.slice(id, 1); // console.log(index + ":" + id);
 
+
+        alert("削除しました");
+        location.href = "http://localhost:10080/user";
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -2701,6 +2704,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.email = "";
         _this.password = "";
         alert("登録しました");
+        location.href = "http://localhost:10080/user";
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -21346,25 +21350,33 @@ var render = function() {
               attrs: { src: "/storage/" + resultList.img_path, alt: "画像なし" }
             }),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("h5", { staticClass: "card-title" }, [
-                _vm._v(_vm._s(resultList.name))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "card-text" }, [
-                _vm._v(_vm._s(resultList.se_carrer))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "card-text" }, [
-                _vm._v(_vm._s(resultList.introduction))
-              ]),
-              _vm._v(" "),
-              _c(
-                "a",
-                { staticClass: "btn btn-primary", attrs: { href: "#" } },
-                [_vm._v("詳細ページへ")]
-              )
-            ])
+            _c(
+              "div",
+              { staticClass: "card-body" },
+              [
+                _c("h5", { staticClass: "card-title" }, [
+                  _vm._v(_vm._s(resultList.name))
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "card-text" }, [
+                  _vm._v(_vm._s(resultList.se_carrer))
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "card-text" }, [
+                  _vm._v(_vm._s(resultList.introduction))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "router-link",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { to: "/user/" + resultList.id }
+                  },
+                  [_vm._v("詳細ページへ")]
+                )
+              ],
+              1
+            )
           ])
         ])
       })
@@ -38492,8 +38504,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/career-board/src/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/career-board/src/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /work/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /work/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -60,7 +60,7 @@
                     <h5 class="card-title">{{ resultList.name }}</h5>
                     <p class="card-text">{{ resultList.se_carrer }}</p>
                     <p class="card-text">{{ resultList.introduction }}</p>
-                    <a href="#" class="btn btn-primary">詳細ページへ</a>
+                    <router-link :to="`/user/${resultList.id}`" class="btn btn-primary">詳細ページへ</router-link>
                 </div>
             </div>
 

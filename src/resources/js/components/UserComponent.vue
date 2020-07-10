@@ -29,6 +29,8 @@ export default {
           this.users.slice(id,1);
           
           // console.log(index + ":" + id);
+          alert("削除しました");
+          location.href="http://localhost:10080/user";
         })
         .catch(error => console.log(error));
 
