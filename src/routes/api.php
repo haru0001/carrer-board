@@ -23,10 +23,14 @@ Route::post('/user', 'UserController@userCreate');
 
 Route::get('/user/{user}', 'UserController@userDetail');
 
-Route::patch('/user/{user}', 'UserController@userEdit');
+
 
 Route::delete('/user/{user}', 'UserController@userDelete');
 
 // 検索機能用
 Route::get('/show-all-user', 'UserController@showAllUsers');
 Route::get('/search_carrer', 'UserController@search');
+
+//編集画面
+Route::patch('/user/{user}', 'UserController@userEdit');
+Route::get('/userTag', 'UserController@getUserTags');
