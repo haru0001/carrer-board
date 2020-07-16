@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Tag;
 
 class UserController extends Controller
 {
@@ -40,6 +41,8 @@ class UserController extends Controller
         return response()->json(['user' => $user]);
     }
 
+
+
     public function userEdit(User $user, Request $request)
     {
         $user->update($request->user);
@@ -59,4 +62,14 @@ class UserController extends Controller
         return User::select('id', 'name', 'se_career', 'introduction', 'img_path')->get();
 
     }
+
+
+    //ユーザーのスキルを取得
+    //TODO 中間テーブルがデータ不足のため、とりあえず、Tagsテーブルの全てのデータを読み取る   
+    //TODO 引数を追加(識別するためのユーザーid情報)
+    public function getUserTags()
+    {
+        return Tag::select('id', 'ct_name', 'ct_level')->get();
+    }
+
 }

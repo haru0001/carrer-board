@@ -17,73 +17,87 @@
         <button type="submit">更新</button>
       </form>
     </div> -->
-      <div class="form-row">
-        <div class="user-form-left">
+      <div>
+        <form @submit.prevent="createUser">
 
-          <div class="user-form-left-top">
-              <div class="form-group" id="name-form">
-                <label for="name">氏名</label>
-                <input v-model="user.name" type="text" class="form-control" placeholder="氏名" readonly>
+
+          <div class="form-row">
+            <div class="user-form-left">
+
+              <div class="user-form-left-top">
+                  <div class="form-group" id="name-form">
+                    <label for="name">氏名</label>
+                    <input v-model="user.name" type="text" class="form-control" placeholder="氏名" >
+                  </div>
+
+                  <div class="form-group col-md-4" id="se-career-form">
+                    <label for="se_career">エンジニア歴</label>
+                    <input v-model="user.se_career" type="text" class="form-control" >
+                  </div>
               </div>
 
-              <div class="form-group col-md-4" id="se-career-form">
-                <label for="se_career">エンジニア歴</label>
-                <input v-model="user.se_career" type="text" class="form-control" readonly>
+              <div class="form-group" id="introduction-form">
+                <label for="introduction">自己紹介</label>
+                <textarea v-model="user.introduction" class="form-control" rows="4" ></textarea>
               </div>
-          </div>
 
-          <div class="form-group" id="introduction-form">
-            <label for="introduction">自己紹介</label>
-            <textarea v-model="user.introduction" class="form-control" rows="4" readonly></textarea>
-          </div>
+            </div>
 
-        </div>
+            <div class="user-form-right">
+              <label for="inputEmail4">アイコン</label>
+              <!-- 画像の有無で表示切り替え -->
+              <img v-if="user.img_path === null" :src="'/image/face2.jpg'" alt="" id="user-image">
+              <img v-else v-bind:src="'/storage/'+user.img_path" alt="画像はありません" id="user-image">
+            </div>
 
-        <div class="user-form-right">
-          <label for="inputEmail4">アイコン</label>
-          <!-- 画像の有無で表示切り替え -->
-          <img v-if="user.img_path === null" :src="'/image/face2.jpg'" alt="" id="user-image">
-          <img v-else v-bind:src="'/storage/'+user.img_path" alt="画像はありません" id="user-image">
-        </div>
+          </div> 
+          
+          <!-- <button class="btn btn-success" @click="userDelete(index,user.id)">保存する</button> -->
+          <!-- TODO  表示位置を変更 -->
+          <button class="btn btn-success" style="flexbox">保存する</button>
 
-      </div> 
+          <!-- ↓後で削除 -->
+          <br><br>
+          <hr>
+          <br><br><br>
 
 
+          <!-- ユーザーのスキル一覧 -->
+          <!-- TODO ユーザーのスキル一覧はまだ未完成。Tagsテーブルと接続しないといけない。 -->
+          <table class="table table-hover">
+              <thead class="thead-light">
+                <tr>
+                    <th scope="col">Skill</th>
+                    <th scope="col">SkillLevel</th>
+                    <th scope="col">Delete</th>
+                </tr>
+              </thead>
 
-      <!-- ユーザーのスキル一覧 -->
-      <table class="table table-hover">
-          <thead class="thead-light">
-            <tr>
-                <th scope="col">Skill</th>
-                <th scope="col">SkillLevel</th>
-                <th scope="col">Delete</th>
-            </tr>
-          </thead>
+              <tbody>
+                  <tr v-for　="tag in tags" id="tags-wrapper">
+                      
+                      <td>{{ tag.ct_name}}</td>
+                      <td>{{ tag.ct_level }}</td>
 
-          <tbody>
-              <tr v-for="(user,index) in users" v-bind:key="user.id">
-                  <th scope="row">{{ user.name }}</th>
-                  <td>{{ user.se_career}}年目</td>
-                  <td>{{ user.introduction }}</td>
-                  <td>
-                      <router-link :to="`/user/${user.id}`">
-                          <button class="btn btn-primary">Detail</button>
-                      </router-link>
-                  </td>
-                  <td>
-                      <router-link :to="`/user/${user.id}/edit`">
-                          <button class="btn btn-success">Edit</button>
-                      </router-link>
-                  </td>
-                  <td>
-                      <button class="btn btn-danger" @click="userDelete(index,user.id)">Delete</button>
-                  </td>
-              </tr>
-          </tbody>
-      </table>
+                      <!-- <td>
+                          <router-link :to="`/user/${user.id}`">
+                          <router-link>
+                              <button class="btn btn-primary">Detail</button>
+                          </router-link>
+                      </td> -->
+                      <td>
+                          <button class="btn btn-danger" @click="userDelete(index,user.id)">Delete</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+
+      </form>
+    </div>
   </div>
 </template>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
 <style scoped>
 
 .user-form-left{
@@ -332,29 +346,86 @@ export default {
         se_career:"",
         introduction:"",
         img_path:""
-      }
+      },
+      tags: []
     };
   },
   methods: {
     updateUser() {
+      const formData = new FormData();
+
+      formData.append('img_path',this.user.img_path);
+      formData.append('name', this.user.name);
+      formData.append('se_career', this.user.se_career);
+      formData.append('introduction', this.user.introduction);
+      formData.append('email', this.user.email);
+      formData.append('password', this.user.password);
+
       axios
         .patch("/api/user/" + this.user.id, {
-          user: this.user
+          user: this.user//ハマダ感動 オブジェクト渡すのオシャレ
         })
         .then(response => {
           this.user = response.data.user;
-          this.$router.push({
-            name: "user_detail",
-            params: { id: this.$route.params.id }
-          });
+          //TODO  臨時削除
+          // this.$router.push({
+          //   name: "user_detail",
+          //   params: { id: this.$route.params.id }
+          // });
         })
         .catch(error => console.log(error));
-    }
+    },
+
+
+
+
+    
+  createUser() {
+    const formData = new FormData();
+
+    formData.append('img_path',this.user.img_path);
+    formData.append('name', this.user.name);
+    formData.append('se_career', this.user.se_career);
+    formData.append('introduction', this.user.introduction);
+    formData.append('email', this.user.email);
+    formData.append('password', this.user.password);
+    
+    // axios.post('/api/user',formData).then(response =>{
+    //     console.log(response)
+    // });
+    axios
+      .post("/api/user", 
+          formData
+      )
+      .then(response => {
+        console.log(response.data.success);
+        this.img_path = "";
+        this.name = "";
+        this.se_career = "";
+        this.introduction = "";
+        this.email = "";
+        this.password = "";
+
+        alert("登録しました");
+        location.href="http://localhost:10080/user";
+      })
+      .catch(error => console.log(error));
+  },
+
   },
   created() {
     axios
       .get("/api/user/" + this.id)
       .then(response => (this.user = response.data.user))
+      .catch(erorr => console.log(error));
+    
+    //ユーザースキルを取得
+    //コントローラーからのレスポンスデータを「usersテーブル」と「Tags」テーブルで分けて受け取る方法が不明なので２回axiosを実行する
+    //TODO 上記の改善策があればよりシンプルなコードに直す。
+    //TODO 中間テーブルがデータ不足のため、とりあえず、Tagsテーブルの全てのデータを読み取る    
+    axios
+      .get("/api/userTag")
+      .then(response => (this.tags = response.data))
       .catch(erorr => console.log(error));
   }
 };
