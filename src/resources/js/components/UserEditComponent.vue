@@ -352,66 +352,19 @@ export default {
   },
   methods: {
     updateUser() {
-      const formData = new FormData();
-
-      formData.append('img_path',this.user.img_path);
-      formData.append('name', this.user.name);
-      formData.append('se_career', this.user.se_career);
-      formData.append('introduction', this.user.introduction);
-      formData.append('email', this.user.email);
-      formData.append('password', this.user.password);
-
       axios
         .patch("/api/user/" + this.user.id, {
-          user: this.user//ハマダ感動 オブジェクト渡すのオシャレ
+          user: this.user
         })
         .then(response => {
           this.user = response.data.user;
-          //TODO  臨時削除
-          // this.$router.push({
-          //   name: "user_detail",
-          //   params: { id: this.$route.params.id }
-          // });
+          this.$router.push({
+            name: "user_detail",
+            params: { id: this.$route.params.id }
+          });
         })
         .catch(error => console.log(error));
-    },
-
-
-
-
-    
-  createUser() {
-    const formData = new FormData();
-
-    formData.append('img_path',this.user.img_path);
-    formData.append('name', this.user.name);
-    formData.append('se_career', this.user.se_career);
-    formData.append('introduction', this.user.introduction);
-    formData.append('email', this.user.email);
-    formData.append('password', this.user.password);
-    
-    // axios.post('/api/user',formData).then(response =>{
-    //     console.log(response)
-    // });
-    axios
-      .post("/api/user", 
-          formData
-      )
-      .then(response => {
-        console.log(response.data.success);
-        this.img_path = "";
-        this.name = "";
-        this.se_career = "";
-        this.introduction = "";
-        this.email = "";
-        this.password = "";
-
-        alert("登録しました");
-        location.href="http://localhost:10080/user";
-      })
-      .catch(error => console.log(error));
-  },
-
+    }
   },
   created() {
     axios

@@ -3496,59 +3496,27 @@ __webpack_require__.r(__webpack_exports__);
     updateUser: function updateUser() {
       var _this = this;
 
-      var formData = new FormData();
-      formData.append('img_path', this.user.img_path);
-      formData.append('name', this.user.name);
-      formData.append('se_career', this.user.se_career);
-      formData.append('introduction', this.user.introduction);
-      formData.append('email', this.user.email);
-      formData.append('password', this.user.password);
       axios.patch("/api/user/" + this.user.id, {
-        user: this.user //ハマダ感動 オブジェクト渡すのオシャレ
-
+        user: this.user
       }).then(function (response) {
-        _this.user = response.data.user; //TODO  臨時削除
-        // this.$router.push({
-        //   name: "user_detail",
-        //   params: { id: this.$route.params.id }
-        // });
-      })["catch"](function (error) {
-        return console.log(error);
-      });
-    },
-    createUser: function createUser() {
-      var _this2 = this;
+        _this.user = response.data.user;
 
-      var formData = new FormData();
-      formData.append('img_path', this.user.img_path);
-      formData.append('name', this.user.name);
-      formData.append('se_career', this.user.se_career);
-      formData.append('introduction', this.user.introduction);
-      formData.append('email', this.user.email);
-      formData.append('password', this.user.password); // axios.post('/api/user',formData).then(response =>{
-      //     console.log(response)
-      // });
-
-      axios.post("/api/user", formData).then(function (response) {
-        console.log(response.data.success);
-        _this2.img_path = "";
-        _this2.name = "";
-        _this2.se_career = "";
-        _this2.introduction = "";
-        _this2.email = "";
-        _this2.password = "";
-        alert("登録しました");
-        location.href = "http://localhost:10080/user";
+        _this.$router.push({
+          name: "user_detail",
+          params: {
+            id: _this.$route.params.id
+          }
+        });
       })["catch"](function (error) {
         return console.log(error);
       });
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this2 = this;
 
     axios.get("/api/user/" + this.id).then(function (response) {
-      return _this3.user = response.data.user;
+      return _this2.user = response.data.user;
     })["catch"](function (erorr) {
       return console.log(error);
     }); //ユーザースキルを取得
@@ -3557,7 +3525,7 @@ __webpack_require__.r(__webpack_exports__);
     //TODO 中間テーブルがデータ不足のため、とりあえず、Tagsテーブルの全てのデータを読み取る    
 
     axios.get("/api/userTag").then(function (response) {
-      return _this3.tags = response.data;
+      return _this2.tags = response.data;
     })["catch"](function (erorr) {
       return console.log(error);
     });
