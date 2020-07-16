@@ -52,9 +52,9 @@
 
         <div v-for　="resultList in resultLists" id="result-list-wrapper">
             <div class="card" style="width: 18rem;">
-                <!-- <img src="image/harumaki.jpeg" class="card-img-top" alt=""> -->
-                <!-- v-bind:href="'#' + project.id" -->
-                <img v-bind:src="'/storage/'+resultList.img_path" class="card-img-top" alt="画像なし">
+                <!-- 画像の有無で表示切り替え -->
+                <img v-if="resultList.img_path === null" :src="'/image/face2.jpg'" class="card-img-top">
+                <img v-else v-bind:src="'/storage/'+resultList.img_path" class="card-img-top" >
                 
                 <div class="card-body">
                     <h5 class="card-title">{{ resultList.name }}</h5>
