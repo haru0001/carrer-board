@@ -5,14 +5,14 @@
 
 * Docker
 
-### laradock導入手順
+## laradock導入手順
 
 プロジェクト
 ∟laradock
 ∟プロジェクト（laravel）フォルダ
 になるように設定していきます。
 
-## laradockの導入
+### laradockの導入
 ```
 $ mkdir {プロジェクト}
 $ cd {プロジェクト}
@@ -35,33 +35,33 @@ root /var/www/{プロジェクト（laravel）フォルダ}/public;
 :wq（保存して終了）
 laradockフォルダ上まで戻る
 
-## dockerの起動
+### dockerの起動
 ```
 $ docker-compose up -d nginx mysql phpmyadmin
 ```
 ※ここでdocker-compose up -d だけで起動すると必要のないコンテナまで立ち上げてしまい死ぬほど時間かかるので
 必ずnginx mysql phpmyadminこの3つを指定して立ち上げてください。
 
-## workspace（コンテナ）へ入る
+### workspace（コンテナ）へ入る
 ```
 $ docker-compose exec --user=laradock workspace bash
 ```
 
-## 既存プロジェクトのクローン
+### 既存プロジェクトのクローン
 ```
 $ git clone {project_repository}
 $ exit
 $ docker-compose stop
 ```
 
-## laradock側の.envの編集
+### laradock側の.envの編集
 クローンしたフォルダ名を指定してしてください
 ```
 APP_CODE_PATH_HOST=../{プロジェクト（laravel）フォルダ}
 APP_CODE_PATH_CONTAINER=/var/www/{プロジェクト（laravel）フォルダ}
 ```
 
-## laravel側の.envの編集
+### laravel側の.envの編集
 クローンしたlaravelプロジェクト内で
 ```
 $ cp .env.example .env
@@ -77,7 +77,7 @@ DB_PASSWORD=secret
 ```
 に変更してください
 
-## 起動しコンテナの中で必要なものをインストール
+### 起動しコンテナの中で必要なものをインストール
 ```
 $ docker-compose up -d nginx mysql phpmyadmin
 $ docker-compose exec --user=laradock workspace bash
@@ -89,11 +89,11 @@ $ exit
 $ docker-compose restart
 ```
 
-## アクセス
+### アクセス
 - 以下のURLにアクセスし、画面が正常に表示されることの確認
 【http://localhost】
 
-## 注意事項
+### 注意事項
 - migrationやseederなどはコンテナの中に入って実行してください。
 - npm run devなどはlaravelプロジェクト配下で実行してください。
 - dockerコマンドはlaradock配下で実行してください。
