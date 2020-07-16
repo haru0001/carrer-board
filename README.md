@@ -6,10 +6,11 @@
 * Docker
 
 ## laradock導入手順
-
+```
 プロジェクト
-∟laradock
-∟プロジェクト（laravel）フォルダ
+  ∟laradock
+  ∟プロジェクト（laravel）フォルダ
+```
 になるように設定していきます。
 
 ### laradockの導入
