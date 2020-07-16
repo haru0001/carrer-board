@@ -2254,6 +2254,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2703,8 +2738,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.introduction = "";
         _this.email = "";
         _this.password = "";
-        alert("登録しました");
-        location.href = "http://localhost:10080/user";
+        alert("登録しました"); // location.href="http://localhost:10080/user";
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -2804,6 +2838,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2811,7 +2881,10 @@ __webpack_require__.r(__webpack_exports__);
       user: {
         id: "",
         name: "",
-        email: ""
+        email: "",
+        se_career: "",
+        introduction: "",
+        img_path: ""
       }
     };
   },
@@ -21406,33 +21479,51 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("h1", [_vm._v("ユーザ一覧")]),
-      _vm._v(" "),
-      _c("router-link", { attrs: { to: "/user/create" } }, [_vm._v("作成")]),
+  return _c("div", [
+    _c("table", { staticClass: "table table-hover" }, [
+      _vm._m(0),
       _vm._v(" "),
       _c(
-        "ul",
+        "tbody",
         _vm._l(_vm.users, function(user, index) {
-          return _c(
-            "li",
-            { key: user.id },
-            [
-              _vm._v("\n      " + _vm._s(user.name) + "\n      "),
-              _c("router-link", { attrs: { to: "/user/" + user.id } }, [
-                _vm._v("詳細")
-              ]),
-              _vm._v(" "),
+          return _c("tr", { key: user.id }, [
+            _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(user.name))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(user.se_career) + "年目")]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(user.introduction))]),
+            _vm._v(" "),
+            _c(
+              "td",
+              [
+                _c("router-link", { attrs: { to: "/user/" + user.id } }, [
+                  _c("button", { staticClass: "btn btn-primary" }, [
+                    _vm._v("Detail")
+                  ])
+                ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "td",
+              [
+                _c(
+                  "router-link",
+                  { attrs: { to: "/user/" + user.id + "/edit" } },
+                  [
+                    _c("button", { staticClass: "btn btn-success" }, [
+                      _vm._v("Edit")
+                    ])
+                  ]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("td", [
               _c(
-                "router-link",
-                { attrs: { to: "/user/" + user.id + "/edit" } },
-                [_vm._v("更新")]
-              ),
-              _vm._v(" "),
-              _c(
-                "span",
+                "button",
                 {
                   staticClass: "btn btn-danger",
                   on: {
@@ -21441,19 +21532,38 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("削除")]
+                [_vm._v("Delete")]
               )
-            ],
-            1
-          )
+            ])
+          ])
         }),
         0
       )
-    ],
-    1
-  )
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("SE")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Introduction")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Detail")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Edit")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Delete")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -21949,24 +22059,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", [
-      _c("h1", [_vm._v("ユーザ更新")]),
-      _vm._v(" "),
-      _c("p", [_vm._v("User Id: " + _vm._s(_vm.user.id))]),
-      _vm._v(" "),
-      _c(
-        "form",
-        {
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.updateUser($event)
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+    _c("div", { staticClass: "form-row" }, [
+      _c("div", { staticClass: "user-form-left" }, [
+        _c("div", { staticClass: "user-form-left-top" }, [
+          _c("div", { staticClass: "form-group", attrs: { id: "name-form" } }, [
+            _c("label", { attrs: { for: "name" } }, [_vm._v("氏名")]),
             _vm._v(" "),
             _c("input", {
               directives: [
@@ -21977,6 +22074,8 @@ var render = function() {
                   expression: "user.name"
                 }
               ],
+              staticClass: "form-control",
+              attrs: { type: "text", placeholder: "氏名", readonly: "" },
               domProps: { value: _vm.user.name },
               on: {
                 input: function($event) {
@@ -21989,33 +22088,86 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "email" } }, [_vm._v("Email:")]),
+          _c(
+            "div",
+            {
+              staticClass: "form-group col-md-4",
+              attrs: { id: "se-career-form" }
+            },
+            [
+              _c("label", { attrs: { for: "se_career" } }, [
+                _vm._v("エンジニア歴")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.user.se_career,
+                    expression: "user.se_career"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", readonly: "" },
+                domProps: { value: _vm.user.se_career },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.user, "se_career", $event.target.value)
+                  }
+                }
+              })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "form-group", attrs: { id: "introduction-form" } },
+          [
+            _c("label", { attrs: { for: "introduction" } }, [
+              _vm._v("自己紹介")
+            ]),
             _vm._v(" "),
-            _c("input", {
+            _c("textarea", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.user.email,
-                  expression: "user.email"
+                  value: _vm.user.introduction,
+                  expression: "user.introduction"
                 }
               ],
-              domProps: { value: _vm.user.email },
+              staticClass: "form-control",
+              attrs: { rows: "4", readonly: "" },
+              domProps: { value: _vm.user.introduction },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.$set(_vm.user, "email", $event.target.value)
+                  _vm.$set(_vm.user, "introduction", $event.target.value)
                 }
               }
             })
-          ]),
-          _vm._v(" "),
-          _c("button", { attrs: { type: "submit" } }, [_vm._v("更新")])
-        ]
-      )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "user-form-right" }, [
+        _c("label", { attrs: { for: "inputEmail4" } }, [_vm._v("アイコン")]),
+        _vm._v(" "),
+        _c("img", {
+          attrs: {
+            src: "/storage/" + _vm.user.img_path,
+            alt: "画像はありません",
+            id: "user-image"
+          }
+        })
+      ])
     ])
   ])
 }
@@ -38504,8 +38656,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /work/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /work/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/career-board/src/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/hamadakazutaka/github/newTestGit/career-board/src/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

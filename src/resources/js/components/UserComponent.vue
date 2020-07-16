@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <h1>ユーザ一覧</h1>
     <router-link :to="`/user/create`">作成</router-link>
     <ul>
@@ -7,10 +7,45 @@
         {{ user.name}}
         <router-link :to="`/user/${user.id}`">詳細</router-link>
         <router-link :to="`/user/${user.id}/edit`">更新</router-link>
-        <!-- <router-link :to="`/user`" class="btn btn-danger" @click="userDelete(index,user.id)">削除</router-link> -->
         <span class="btn btn-danger" @click="userDelete(index,user.id)">削除</span>
       </li>
     </ul>
+  </div> -->
+  <div>
+      <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">SE</th>
+                <th scope="col">Introduction</th>
+                
+                <th scope="col">Detail</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+          </thead>
+
+          <tbody>
+              <tr v-for="(user,index) in users" v-bind:key="user.id">
+                  <th scope="row">{{ user.name }}</th>
+                  <td>{{ user.se_career}}年目</td>
+                  <td>{{ user.introduction }}</td>
+                  <td>
+                      <router-link :to="`/user/${user.id}`">
+                          <button class="btn btn-primary">Detail</button>
+                      </router-link>
+                  </td>
+                  <td>
+                      <router-link :to="`/user/${user.id}/edit`">
+                          <button class="btn btn-success">Edit</button>
+                      </router-link>
+                  </td>
+                  <td>
+                      <button class="btn btn-danger" @click="userDelete(index,user.id)">Delete</button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
   </div>
 </template>
 

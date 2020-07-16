@@ -409,7 +409,7 @@ methods: {
         this.password = "";
 
         alert("登録しました");
-        location.href="http://localhost:10080/user";
+        // location.href="http://localhost:10080/user";
       })
       .catch(error => console.log(error));
   },
