@@ -14,12 +14,6 @@
                     <router-link v-bind:to="{name: 'user'}">
                         <button class="btn btn-success">List</button>
                     </router-link>
-                    <!-- <router-link >
-                        <button class="btn btn-success">hamada</button>
-                    </router-link>
-                    <router-link >
-                        <button class="btn btn-success">トップ</button>
-                    </router-link> -->
                 </div>
             </nav>
         </div>
