@@ -234,20 +234,11 @@ export default {
         author: "Jane Doe",
         publishedAt: "2016-04-10",
       },
-      test: [
-        {
-          id: 1,
-          title: "Do the dishes",
-        },
-        {
-          id: 2,
-          title: "Take out the trash",
-        },
-        {
-          id: 3,
-          title: "Mow the lawn",
-        },
-      ],
+      //   postSearchWordLists: [
+      //     {
+      //       searchSkill: "",
+      //     },
+      //   ],
     };
   },
   methods: {
@@ -272,7 +263,9 @@ export default {
 
       axios.post("/api/search_carrer/", data).then((res) => {
         // テストのため返り値をコンソールに表示
-        alert(res.data.success);
+        this.resultLists = res.data;
+        // alert(res.data.success);
+        alert("検索完了");
       });
     },
 

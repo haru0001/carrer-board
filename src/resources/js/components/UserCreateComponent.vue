@@ -171,6 +171,9 @@
             type="button"
             class="btn btn-primary"
             id="registrate-btn"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="登録します"
             v-on:click="createUser"
           >登録する</button>
         </div>

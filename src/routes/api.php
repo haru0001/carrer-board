@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,9 @@ Route::post('/search_carrer', 'UserController@searchSkills');
 
 //編集画面
 Route::patch('/user/{user}', 'UserController@userEdit');
-Route::get('/userTag', 'UserController@getUserTags');
+
+//詳細画面
+Route::get('/userSkills/{user}', 'UserController@getUserSkills');
 
 //新規登録や編集画面でのスキル検索
 Route::get('/getSuggestionListTags', 'UserController@getSuggestionListTags');

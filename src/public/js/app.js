@@ -2181,17 +2181,12 @@ __webpack_require__.r(__webpack_exports__);
         title: "How to do lists in Vue",
         author: "Jane Doe",
         publishedAt: "2016-04-10"
-      },
-      test: [{
-        id: 1,
-        title: "Do the dishes"
-      }, {
-        id: 2,
-        title: "Take out the trash"
-      }, {
-        id: 3,
-        title: "Mow the lawn"
-      }]
+      } //   postSearchWordLists: [
+      //     {
+      //       searchSkill: "",
+      //     },
+      //   ],
+
     };
   },
   methods: {
@@ -2199,6 +2194,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     // 押下した時にサーチして、getResult()を実行する。
     addSearchTag: function addSearchTag() {
+      var _this = this;
+
       // タグ検索フォームを空にする
       $("#carrerSearchForm").val(""); //ユーザーが指定したタグを、タグ管理リスト(searchWordLists)に追加
       //画面に選択したスキルTagを表示させるために、配列に格納する
@@ -2211,18 +2208,20 @@ __webpack_require__.r(__webpack_exports__);
       };
       axios.post("/api/search_carrer/", data).then(function (res) {
         // テストのため返り値をコンソールに表示
-        alert(res.data.success);
+        _this.resultLists = res.data; // alert(res.data.success);
+
+        alert("検索完了");
       });
     },
     getResult: function getResult() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get("/api/show-all-user").then(function (res) {
-        _this.resultLists = res.data; //res.dataで取得。引数に合わせてOK
+        _this2.resultLists = res.data; //res.dataで取得。引数に合わせてOK
       });
     },
     getSuggestionListTags: function getSuggestionListTags() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get("/api/getSuggestionListTags").then(function (res) {
         var array = res.data.skillTags; //JSONで取得したオブジェクトを配列に格納し、検索フォームでサジェスチョンできるようにする。
@@ -2230,7 +2229,7 @@ __webpack_require__.r(__webpack_exports__);
         for (var key in array) {
           var ct_name = array[key].ct_name;
 
-          _this2.simpleSuggestionList.push(ct_name);
+          _this3.simpleSuggestionList.push(ct_name);
         }
       });
     }
@@ -2253,6 +2252,31 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2343,6 +2367,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_simple_suggest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-simple-suggest */ "./node_modules/vue-simple-suggest/dist/es6.js");
 /* harmony import */ var vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-simple-suggest/dist/styles.css */ "./node_modules/vue-simple-suggest/dist/styles.css");
 /* harmony import */ var vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
 //
 //
 //
@@ -3151,30 +3178,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3208,22 +3211,27 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         return console.log(error);
       });
+    },
+    getUserSkills: function getUserSkills() {
+      var _this2 = this;
+
+      //ユーザーのスキル情報を取得
+      //コントローラーからのレスポンスデータを「usersテーブル」と「Tags」テーブルで分けて受け取るので、２回axiosを実行する
+      axios.get("/api/userSkills/" + this.user.id).then(function (response) {
+        _this2.tags = response.data; // alert("スキルを読み込んだ");
+      })["catch"](function (erorr) {
+        return console.log(error);
+      });
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     axios.get("/api/user/" + this.id).then(function (response) {
-      return _this2.user = response.data.user;
-    })["catch"](function (erorr) {
-      return console.log(error);
-    }); //ユーザースキルを取得
-    //コントローラーからのレスポンスデータを「usersテーブル」と「Tags」テーブルで分けて受け取る方法が不明なので２回axiosを実行する
-    //TODO 上記の改善策があればよりシンプルなコードに直す。
-    //TODO 中間テーブルがデータ不足のため、とりあえず、Tagsテーブルの全てのデータを読み取る    
+      _this3.user = response.data.user;
 
-    axios.get("/api/userTag").then(function (response) {
-      return _this2.tags = response.data;
+      _this3.getUserSkills(); // alert("UserDataを読み込んだ");
+
     })["catch"](function (erorr) {
       return console.log(error);
     });
@@ -3549,34 +3557,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3599,7 +3579,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.patch("/api/user/" + this.user.id, {
         user: this.user
       }).then(function (response) {
-        _this.user = response.data.user;
+        _this.user = response.data.user; //this.$router.pushで画面遷移　同時にparamsも持たせることができる。(便利！)
 
         _this.$router.push({
           name: "user_detail",
@@ -3610,22 +3590,26 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         return console.log(error);
       });
+    },
+    //ユーザースキルを取得
+    getUserSkills: function getUserSkills() {
+      var _this2 = this;
+
+      axios.get("/api/userSkills/" + this.user.id).then(function (response) {
+        _this2.tags = response.data;
+        alert("スキルを読み込んだ");
+      })["catch"](function (erorr) {
+        return console.log(error);
+      });
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     axios.get("/api/user/" + this.id).then(function (response) {
-      return _this2.user = response.data.user;
-    })["catch"](function (erorr) {
-      return console.log(error);
-    }); //ユーザースキルを取得
-    //コントローラーからのレスポンスデータを「usersテーブル」と「Tags」テーブルで分けて受け取る方法が不明なので２回axiosを実行する
-    //TODO 上記の改善策があればよりシンプルなコードに直す。
-    //TODO 中間テーブルがデータ不足のため、とりあえず、Tagsテーブルの全てのデータを読み取る    
+      _this3.user = response.data.user;
 
-    axios.get("/api/userTag").then(function (response) {
-      return _this2.tags = response.data;
+      _this3.getUserSkills();
     })["catch"](function (erorr) {
       return console.log(error);
     });
@@ -3703,7 +3687,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 72%;\n}\n.user-form-left-top[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 100%;\n}\n#name-form[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 60%;\n}\n#se-career-form[data-v-8cf8dc74]{\ndisplay: inline-block;\n/* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n/* width: 50%; */\n}\n#introduction-form[data-v-8cf8dc74]{\ndisplay: inline-block;\nmargin-top: 3%;\nwidth: 100%;\n}\n.user-form-right[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 23%;\nmargin-left: 3%;\n}\n#user-image[data-v-8cf8dc74]{\nwidth: 94%;\npadding: 1%;\nborder: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-8cf8dc74]{\ntext-align: center;\n}\n#upload-image-btn[data-v-8cf8dc74]{\nwidth: 70%;\nmargin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-8cf8dc74]{\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-8cf8dc74]{\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-8cf8dc74]{\n  display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-8cf8dc74] {\n-webkit-animation: bounce-in-data-v-8cf8dc74 .5s;\n        animation: bounce-in-data-v-8cf8dc74 .5s;\n}\n.bounce-leave-active[data-v-8cf8dc74] {\nanimation: bounce-in-data-v-8cf8dc74 .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-8cf8dc74]{\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-8cf8dc74]{\n  display: inline-block;\n  width:600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-8cf8dc74] {\ndisplay: inline-block;\nposition: relative;\nfont-size: 200%;\nfont:bold;\npadding: 10px 25px;\nbackground-color: lightcyan;\nmargin-right: 35px;\nborder-radius: 10px;\n}\n.list-item[data-v-8cf8dc74] :hover{\nbackground-color: aqua;\n}\n.close[data-v-8cf8dc74]{\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-8cf8dc74]{\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-8cf8dc74]{\nwidth:300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-8cf8dc74]{\ndisplay: inline-block;\nmargin: 0 5%;\nwidth: 10%;\n}\n#carrerSearchFormWrapper[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 40%;\n}\n#button-addon2[data-v-8cf8dc74]{\ndisplay: inline-block;\ncolor: aliceblue;\nfont: bolder;\nbackground: green;\n}\n.list-enter-active[data-v-8cf8dc74]{\n/* transition: all 1s; */\n-webkit-animation: bounce-in-data-v-8cf8dc74 .5s;\n        animation: bounce-in-data-v-8cf8dc74 .5s;\n}\n.list-leave-active[data-v-8cf8dc74] {\nanimation: bounce-in-data-v-8cf8dc74 .5s reverse;\n}\n.list-enter[data-v-8cf8dc74], .list-leave-to[data-v-8cf8dc74] /* .list-leave-active for below version 2.1.8 */ {\nopacity: 0;\ntransform: translateY(30px);\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 20%;\nmargin: 0 5% 0 10%;\n}\nfieldset[data-v-8cf8dc74] {\ndisplay: inline-block;\nborder: none;\ntext-align: center;\n}\n.radio-inline__input[data-v-8cf8dc74] {\nmargin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-8cf8dc74] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all .2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-8cf8dc74] {\n  background: #FF8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0,0,0,.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-8cf8dc74] {\n  outline-color: #4D90FE;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-8cf8dc74]{\ntext-align: center;\nmargin-top: 100px;\n}\n#registrate-btn[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 20%;\nfont-size: 130%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-8cf8dc74] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-8cf8dc74] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-8cf8dc74] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n}\n#upload-image-btn[data-v-8cf8dc74] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-8cf8dc74] {\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-8cf8dc74] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-8cf8dc74] {\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.bounce-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-8cf8dc74] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-8cf8dc74] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font: bold;\n  padding: 10px 25px;\n  background-color: lightcyan;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-8cf8dc74] :hover {\n  background-color: aqua;\n}\n.close[data-v-8cf8dc74] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-8cf8dc74] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-8cf8dc74] {\n  width: 300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-8cf8dc74] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-8cf8dc74] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-8cf8dc74] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.list-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n.list-enter[data-v-8cf8dc74], .list-leave-to[data-v-8cf8dc74] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n  margin: 0 5% 0 10%;\n}\nfieldset[data-v-8cf8dc74] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-8cf8dc74] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-8cf8dc74] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-8cf8dc74] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-8cf8dc74] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
 
 // exports
 
@@ -3722,7 +3706,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 72%;\n}\n.user-form-left-top[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 100%;\n}\n#name-form[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 60%;\n}\n#se-career-form[data-v-03e6892d]{\ndisplay: inline-block;\n/* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n/* width: 50%; */\n}\n#introduction-form[data-v-03e6892d]{\ndisplay: inline-block;\nmargin-top: 3%;\nwidth: 100%;\n}\n.user-form-right[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 23%;\nmargin-left: 3%;\n}\n#user-image[data-v-03e6892d]{\nwidth: 94%;\npadding: 1%;\nborder: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-03e6892d]{\ntext-align: center;\n}\n#upload-image-btn[data-v-03e6892d]{\nwidth: 70%;\nmargin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-03e6892d]{\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-03e6892d]{\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-03e6892d]{\n  display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-03e6892d] {\n-webkit-animation: bounce-in-data-v-03e6892d .5s;\n        animation: bounce-in-data-v-03e6892d .5s;\n}\n.bounce-leave-active[data-v-03e6892d] {\nanimation: bounce-in-data-v-03e6892d .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-03e6892d {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-03e6892d]{\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-03e6892d]{\n  display: inline-block;\n  width:600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-03e6892d] {\ndisplay: inline-block;\nposition: relative;\nfont-size: 200%;\nfont:bold;\npadding: 10px 25px;\nbackground-color: lightcyan;\nmargin-right: 35px;\nborder-radius: 10px;\n}\n.list-item[data-v-03e6892d] :hover{\nbackground-color: aqua;\n}\n.close[data-v-03e6892d]{\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-03e6892d]{\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-03e6892d]{\nwidth:300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-03e6892d]{\ndisplay: inline-block;\nmargin: 0 5%;\nwidth: 10%;\n}\n#carrerSearchFormWrapper[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 40%;\n}\n#button-addon2[data-v-03e6892d]{\ndisplay: inline-block;\ncolor: aliceblue;\nfont: bolder;\nbackground: green;\n}\n.list-enter-active[data-v-03e6892d]{\n/* transition: all 1s; */\n-webkit-animation: bounce-in-data-v-03e6892d .5s;\n        animation: bounce-in-data-v-03e6892d .5s;\n}\n.list-leave-active[data-v-03e6892d] {\nanimation: bounce-in-data-v-03e6892d .5s reverse;\n}\n.list-enter[data-v-03e6892d], .list-leave-to[data-v-03e6892d] /* .list-leave-active for below version 2.1.8 */ {\nopacity: 0;\ntransform: translateY(30px);\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 20%;\nmargin: 0 5% 0 10%;\n}\nfieldset[data-v-03e6892d] {\ndisplay: inline-block;\nborder: none;\ntext-align: center;\n}\n.radio-inline__input[data-v-03e6892d] {\nmargin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-03e6892d] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all .2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-03e6892d] {\n  background: #FF8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0,0,0,.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-03e6892d] {\n  outline-color: #4D90FE;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-03e6892d]{\ntext-align: center;\nmargin-top: 100px;\n}\n#registrate-btn[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 20%;\nfont-size: 130%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-03e6892d] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-03e6892d] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-03e6892d] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-03e6892d] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-03e6892d] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-03e6892d] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-03e6892d] {\n  text-align: center;\n}\n#upload-image-btn[data-v-03e6892d] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-03e6892d] {\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-03e6892d] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-03e6892d] {\n  -webkit-animation: bounce-in-data-v-03e6892d 0.5s;\n          animation: bounce-in-data-v-03e6892d 0.5s;\n}\n.bounce-leave-active[data-v-03e6892d] {\n  animation: bounce-in-data-v-03e6892d 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-03e6892d] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-03e6892d] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-03e6892d] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font: bold;\n  padding: 10px 25px;\n  background-color: lightcyan;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-03e6892d] :hover {\n  background-color: aqua;\n}\n.close[data-v-03e6892d] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-03e6892d] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-03e6892d] {\n  width: 300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-03e6892d] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-03e6892d] {\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-03e6892d] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-03e6892d] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-03e6892d 0.5s;\n          animation: bounce-in-data-v-03e6892d 0.5s;\n}\n.list-leave-active[data-v-03e6892d] {\n  animation: bounce-in-data-v-03e6892d 0.5s reverse;\n}\n.list-enter[data-v-03e6892d], .list-leave-to[data-v-03e6892d] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-03e6892d] {\n  display: inline-block;\n  width: 20%;\n  margin: 0 5% 0 10%;\n}\nfieldset[data-v-03e6892d] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-03e6892d] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-03e6892d] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-03e6892d] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-03e6892d] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-03e6892d] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-03e6892d] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
 
 // exports
 
@@ -22340,15 +22324,65 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-danger",
-                  on: {
-                    click: function($event) {
-                      return _vm.userDelete(index, user.id)
-                    }
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "modal",
+                    "data-target": "#exampleModal"
+                  }
+                },
+                [_vm._v("Delete")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "modal fade",
+                  attrs: {
+                    id: "exampleModal",
+                    tabindex: "-1",
+                    role: "dialog",
+                    "aria-labelledby": "exampleModalLabel",
+                    "aria-hidden": "true"
                   }
                 },
                 [
-                  _vm._v(
-                    "\n                        Delete\n                    "
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal-dialog",
+                      attrs: { role: "document" }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-content" }, [
+                        _vm._m(1, true),
+                        _vm._v(" "),
+                        _vm._m(2, true),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "modal-footer" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-secondary",
+                              attrs: { type: "button", "data-dismiss": "modal" }
+                            },
+                            [_vm._v("Close")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger",
+                              on: {
+                                click: function($event) {
+                                  return _vm.userDelete(index, user.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Delete")]
+                          )
+                        ])
+                      ])
+                    ]
                   )
                 ]
               )
@@ -22379,6 +22413,26 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Delete")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("本当に削除しますか？")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body" }, [
+      _c("p", [_vm._v("削除してしまうと復元はできません。")])
     ])
   }
 ]
@@ -22767,7 +22821,13 @@ var render = function() {
             "button",
             {
               staticClass: "btn btn-primary",
-              attrs: { type: "button", id: "registrate-btn" },
+              attrs: {
+                type: "button",
+                id: "registrate-btn",
+                "data-toggle": "tooltip",
+                "data-placement": "top",
+                title: "登録します"
+              },
               on: { click: _vm.createUser }
             },
             [_vm._v("登録する")]
@@ -22916,12 +22976,15 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("br"),
+    _vm._v(" "),
     _c("br"),
     _vm._v(" "),
     _c("hr"),
     _vm._v(" "),
     _c("br"),
+    _vm._v(" "),
     _c("br"),
+    _vm._v(" "),
     _c("br"),
     _vm._v(" "),
     _c("table", { staticClass: "table table-hover" }, [
@@ -22984,7 +23047,7 @@ var render = function() {
           on: {
             submit: function($event) {
               $event.preventDefault()
-              return _vm.createUser($event)
+              return _vm.updateUser($event)
             }
           }
         },
@@ -23117,17 +23180,22 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("button", { staticClass: "btn btn-success", staticStyle: {} }, [
-            _vm._v("保存する")
-          ]),
+          _c(
+            "button",
+            { staticClass: "btn btn-success", attrs: { type: "submit" } },
+            [_vm._v("更新")]
+          ),
           _vm._v(" "),
           _c("br"),
+          _vm._v(" "),
           _c("br"),
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
           _c("br"),
+          _vm._v(" "),
           _c("br"),
+          _vm._v(" "),
           _c("br"),
           _vm._v(" "),
           _c("table", { staticClass: "table table-hover" }, [

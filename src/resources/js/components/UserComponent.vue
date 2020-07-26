@@ -1,78 +1,103 @@
 <template>
-    <div>
-        <table class="table table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">SE</th>
-                    <th scope="col">Introduction</th>
+  <div>
+    <table class="table table-hover">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">SE</th>
+          <th scope="col">Introduction</th>
 
-                    <th scope="col">Detail</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                </tr>
-            </thead>
+          <th scope="col">Detail</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
 
-            <tbody>
-                <tr v-for="(user, index) in users" v-bind:key="user.id">
-                    <th scope="row">{{ user.name }}</th>
-                    <td>{{ user.se_career }}年目</td>
-                    <td>{{ user.introduction }}</td>
-                    <td>
-                        <router-link :to="`/user/${user.id}`">
-                            <button class="btn btn-primary">Detail</button>
-                        </router-link>
-                    </td>
-                    <td>
-                        <router-link :to="`/user/${user.id}/edit`">
-                            <button class="btn btn-success">Edit</button>
-                        </router-link>
-                    </td>
-                    <td>
-                        <button
-                            class="btn btn-danger"
-                            @click="userDelete(index, user.id)"
-                        >
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+      <tbody>
+        <tr v-for="(user, index) in users" v-bind:key="user.id">
+          <th scope="row">{{ user.name }}</th>
+          <td>{{ user.se_career }}年目</td>
+          <td>{{ user.introduction }}</td>
+          <td>
+            <router-link :to="`/user/${user.id}`">
+              <button class="btn btn-primary">Detail</button>
+            </router-link>
+          </td>
+          <td>
+            <router-link :to="`/user/${user.id}/edit`">
+              <button class="btn btn-success">Edit</button>
+            </router-link>
+          </td>
+          <td>
+            <!-- <button class="btn btn-danger" @click="userDelete(index, user.id)">Delete</button> -->
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-toggle="modal"
+              data-target="#exampleModal"
+            >Delete</button>
+            <!-- Modal -->
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">本当に削除しますか？</h5>
+                  </div>
+                  <div class="modal-body">
+                    <p>削除してしまうと復元はできません。</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-danger" @click="userDelete(index, user.id)">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            users: []
-        };
-    },
-    methods: {
-        userDelete(index, id) {
-            axios
-                .delete("/api/user/" + id)
-                .then(response => {
-                    this.users.slice(id, 1);
+  data() {
+    return {
+      users: [],
+    };
+  },
+  methods: {
+    userDelete(index, id) {
+      axios
+        .delete("/api/user/" + id)
+        .then((response) => {
+          this.users.slice(id, 1);
 
-                    // console.log(index + ":" + id);
-                    alert("削除しました");
-                    location.href = "http://localhost:10080/user";
-                })
-                .catch(error => console.log(error));
-        }
+          // console.log(index + ":" + id);
+          alert("削除しました");
+          location.href = "http://localhost:10080/user";
+        })
+        .catch((error) => console.log(error));
     },
-    created() {
-        axios
-            .get("/api/user")
-            .then(response => {
-                this.users = response.data.users;
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
+  },
+  created() {
+    axios
+      .get("/api/user")
+      .then((response) => {
+        this.users = response.data.users;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 };
 </script>
 ;
