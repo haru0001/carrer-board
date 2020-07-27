@@ -2771,6 +2771,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3668,7 +3684,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-46aa920a] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-46aa920a] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-46aa920a] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-46aa920a] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-46aa920a] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n}\n#upload-image-btn[data-v-46aa920a] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-46aa920a] {\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-46aa920a] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-46aa920a] {\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.bounce-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-46aa920a] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-46aa920a] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-46aa920a] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font: bold;\n  padding: 10px 25px;\n  background-color: lightcyan;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-46aa920a] :hover {\n  background-color: aqua;\n}\n.close[data-v-46aa920a] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-46aa920a] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-46aa920a] {\n  width: 300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a] {\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-46aa920a] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-46aa920a] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.list-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n.list-enter[data-v-46aa920a], .list-leave-to[data-v-46aa920a] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-46aa920a] {\n  display: inline-block;\n  width: 20%;\n  margin: 0 5% 0 10%;\n}\nfieldset[data-v-46aa920a] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-46aa920a] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-46aa920a] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-46aa920a] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-46aa920a] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-46aa920a] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-46aa920a] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n}\n#upload-image-btn[data-v-46aa920a] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-46aa920a] {\n  /* display: flex;\n  justify-content: space-between; */\n  margin-top: 50px;\n  /* width: 600px; */\n}\n.WrapperAsFlexbox[data-v-46aa920a] {\n  display: flex;\n  justify-content: space-around;\n  /* justify-content: flex-end; */\n}\n.vue-simple-suggest-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 40%;\n}\n#result-list-wrapper[data-v-46aa920a] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-46aa920a] {\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.bounce-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-46aa920a] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-46aa920a] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-46aa920a] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.list-item-wrapper[data-v-46aa920a] {\n}\n.list-item[data-v-46aa920a] :hover {\n  background-color: aqua;\n}\n.close[data-v-46aa920a] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-46aa920a] {\n  font-size: 100%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-46aa920a] {\n  width: 100%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#button-addon2[data-v-46aa920a] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-46aa920a] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.list-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n.list-enter[data-v-46aa920a], .list-leave-to[data-v-46aa920a] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-46aa920a] {\n  display: inline-block;\n\n  margin: 0 2%;\n}\nfieldset[data-v-46aa920a] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-46aa920a] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
 
 // exports
 
@@ -22620,6 +22636,12 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
         _c(
           "div",
           { staticClass: "vue-simple-suggest-wrapper" },
@@ -22644,173 +22666,124 @@ var render = function() {
                 }
               },
               [
-                _c("div", { staticClass: "input-group mb-3" }, [
-                  _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
-                    _c("input", {
-                      staticClass: "form-control",
-                      attrs: {
-                        type: "text",
-                        placeholder: "Search",
-                        "aria-label": "Recipient's username",
-                        "aria-describedby": "button-addon2",
-                        id: "carrerSearchForm",
-                        autocomplete: "off"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { attrs: { id: "skillLevelWrapper" } }, [
-                    _c("fieldset", { attrs: { id: "skillLevelFielfset" } }, [
+                _c(
+                  "div",
+                  { staticClass: "input-group mb-3 WrapperAsFlexbox" },
+                  [
+                    _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
                       _c("input", {
-                        staticClass: "radio-inline__input btn-outline-primary",
+                        staticClass: "form-control",
                         attrs: {
-                          id: "item-1",
-                          type: "radio",
-                          name: "accessible-radio",
-                          value: "item-1",
-                          checked: "checked"
+                          type: "text",
+                          placeholder: "Search",
+                          "aria-label": "Recipient's username",
+                          "aria-describedby": "button-addon2",
+                          id: "carrerSearchForm",
+                          autocomplete: "off"
                         }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "radio-inline__label",
-                          attrs: { for: "item-1" }
-                        },
-                        [_vm._v("1")]
-                      ),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "radio-inline__input",
-                        attrs: {
-                          id: "item-2",
-                          type: "radio",
-                          name: "accessible-radio",
-                          value: "item-2"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "radio-inline__label",
-                          attrs: { for: "item-2" }
-                        },
-                        [_vm._v("2")]
-                      ),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "radio-inline__input",
-                        attrs: {
-                          id: "item-3",
-                          type: "radio",
-                          name: "accessible-radio",
-                          value: "item-3"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "radio-inline__label",
-                          attrs: { for: "item-3" }
-                        },
-                        [_vm._v("3")]
-                      )
+                      })
                     ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "input-group-append" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-outline-secondary btn-info",
-                        attrs: { type: "button", id: "button-addon2" },
-                        on: { click: _vm.addSearchTag }
-                      },
-                      [_vm._v("追加")]
-                    )
-                  ])
-                ])
+                  ]
+                )
               ]
             ),
             _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group-append" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-secondary btn-info",
+                  attrs: { type: "button", id: "button-addon2" },
+                  on: { click: _vm.addSearchTag }
+                },
+                [_vm._v("追加")]
+              )
+            ])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c(
+          "div",
+          [
             _c(
-              "div",
-              [
-                _c(
-                  "transition-group",
-                  { attrs: { name: "list", tag: "p" } },
-                  _vm._l(_vm.searchWordLists, function(searchWordList, index) {
-                    return _c(
-                      "span",
-                      { key: searchWordList, staticClass: "list-item" },
+              "transition-group",
+              {
+                staticClass: "list-item-wrapper",
+                attrs: { name: "list", tag: "div" }
+              },
+              _vm._l(_vm.searchWordLists, function(searchWordList, index) {
+                return _c(
+                  "span",
+                  { key: searchWordList, staticClass: "list-item" },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "close",
+                        attrs: { type: "button", "aria-label": "Close" },
+                        on: {
+                          click: function($event) {
+                            return _vm.searchWordLists.splice(index, 1)
+                          }
+                        }
+                      },
                       [
                         _c(
-                          "button",
+                          "svg",
                           {
-                            staticClass: "close",
-                            attrs: { type: "button", "aria-label": "Close" },
-                            on: {
-                              click: function($event) {
-                                return _vm.searchWordLists.splice(index, 1)
-                              }
+                            staticClass: "bi bi-x-circle hama-close",
+                            attrs: {
+                              width: "1em",
+                              height: "1em",
+                              viewBox: "0 0 16 16",
+                              fill: "currentColor",
+                              xmlns: "http://www.w3.org/2000/svg"
                             }
                           },
                           [
-                            _c(
-                              "svg",
-                              {
-                                staticClass: "bi bi-x-circle hama-close",
-                                attrs: {
-                                  width: "1em",
-                                  height: "1em",
-                                  viewBox: "0 0 16 16",
-                                  fill: "currentColor",
-                                  xmlns: "http://www.w3.org/2000/svg"
-                                }
-                              },
-                              [
-                                _c("path", {
-                                  attrs: {
-                                    "fill-rule": "evenodd",
-                                    d:
-                                      "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("path", {
-                                  attrs: {
-                                    "fill-rule": "evenodd",
-                                    d:
-                                      "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("path", {
-                                  attrs: {
-                                    "fill-rule": "evenodd",
-                                    d:
-                                      "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
-                                  }
-                                })
-                              ]
-                            )
+                            _c("path", {
+                              attrs: {
+                                "fill-rule": "evenodd",
+                                d:
+                                  "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("path", {
+                              attrs: {
+                                "fill-rule": "evenodd",
+                                d:
+                                  "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("path", {
+                              attrs: {
+                                "fill-rule": "evenodd",
+                                d:
+                                  "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
+                              }
+                            })
                           ]
-                        ),
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(searchWordList) +
-                            "\n            "
                         )
                       ]
+                    ),
+                    _vm._v(
+                      "\n            " + _vm._s(searchWordList) + "\n          "
                     )
-                  }),
-                  0
+                  ]
                 )
-              ],
-              1
+              }),
+              0
             )
           ],
           1
@@ -22837,7 +22810,65 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "skillLevelWrapper" } }, [
+      _c("fieldset", { attrs: { id: "skillLevelFielfset" } }, [
+        _c("input", {
+          staticClass: "radio-inline__input btn-outline-primary",
+          attrs: {
+            id: "item-1",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-1",
+            checked: "checked"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-1" } },
+          [_vm._v("1")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input",
+          attrs: {
+            id: "item-2",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-2"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-2" } },
+          [_vm._v("2")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input",
+          attrs: {
+            id: "item-3",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-3"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-3" } },
+          [_vm._v("3")]
+        )
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

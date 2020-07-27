@@ -56,6 +56,10 @@
           </div>
         </div>
 
+        <br />
+        <hr />
+        <br />
+
         <!-- スキル追加フォーム -->
         <div class="vue-simple-suggest-wrapper">
           <vue-simple-suggest
@@ -67,7 +71,7 @@
             v-on:suggestion-click="creatSearchTag"
             class="vue-simple-suggest-form"
           >
-            <div class="input-group mb-3">
+            <div class="input-group mb-3 WrapperAsFlexbox">
               <div id="carrerSearchFormWrapper">
                 <input
                   type="text"
@@ -79,91 +83,95 @@
                   autocomplete="off"
                 />
               </div>
-
-              <div id="skillLevelWrapper">
-                <fieldset id="skillLevelFielfset">
-                  <input
-                    id="item-1"
-                    class="radio-inline__input btn-outline-primary"
-                    type="radio"
-                    name="accessible-radio"
-                    value="item-1"
-                    checked="checked"
-                  />
-                  <label class="radio-inline__label" for="item-1">1</label>
-                  <input
-                    id="item-2"
-                    class="radio-inline__input"
-                    type="radio"
-                    name="accessible-radio"
-                    value="item-2"
-                  />
-                  <label class="radio-inline__label" for="item-2">2</label>
-                  <input
-                    id="item-3"
-                    class="radio-inline__input"
-                    type="radio"
-                    name="accessible-radio"
-                    value="item-3"
-                  />
-                  <label class="radio-inline__label" for="item-3">3</label>
-                </fieldset>
-              </div>
-
-              <div class="input-group-append">
-                <button
-                  class="btn btn-outline-secondary btn-info"
-                  type="button"
-                  id="button-addon2"
-                  v-on:click="addSearchTag"
-                >追加</button>
-              </div>
             </div>
           </vue-simple-suggest>
+          <div id="skillLevelWrapper">
+            <fieldset id="skillLevelFielfset">
+              <input
+                id="item-1"
+                class="radio-inline__input btn-outline-primary"
+                type="radio"
+                name="accessible-radio"
+                value="item-1"
+                checked="checked"
+              />
+              <label class="radio-inline__label" for="item-1">1</label>
+              <input
+                id="item-2"
+                class="radio-inline__input"
+                type="radio"
+                name="accessible-radio"
+                value="item-2"
+              />
+              <label class="radio-inline__label" for="item-2">2</label>
+              <input
+                id="item-3"
+                class="radio-inline__input"
+                type="radio"
+                name="accessible-radio"
+                value="item-3"
+              />
+              <label class="radio-inline__label" for="item-3">3</label>
+            </fieldset>
+          </div>
 
-          <!-- 追加するスキルを表示 -->
-          <div>
-            <transition-group name="list" tag="p">
-              <span
-                v-for="(searchWordList,
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-secondary btn-info"
+              type="button"
+              id="button-addon2"
+              v-on:click="addSearchTag"
+            >追加</button>
+          </div>
+        </div>
+
+        <!--TODO とりあえずHTMLで幅表生  -->
+        <br />
+        <br />
+        <br />
+        <!-- 追加するスキルを表示 -->
+
+        <div>
+          <transition-group name="list" tag="div" class="list-item-wrapper">
+            <span
+              v-for="(searchWordList,
                                 index) in searchWordLists"
-                v-bind:key="searchWordList"
-                class="list-item"
-              >
-                <button
-                  type="button"
-                  class="close"
-                  aria-label="Close"
-                  v-on:click="
+              v-bind:key="searchWordList"
+              class="list-item"
+            >
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                v-on:click="
                                         searchWordLists.splice(index, 1)
                                     "
+              >
+                <svg
+                  class="bi bi-x-circle hama-close"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    class="bi bi-x-circle hama-close"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
-                    />
-                  </svg>
-                </button>
-                {{ searchWordList }}
-              </span>
-            </transition-group>
-          </div>
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
+                  />
+                </svg>
+              </button>
+              {{ searchWordList }}
+            </span>
+          </transition-group>
         </div>
 
         <div id="registrate-btn-wrapper">
@@ -232,14 +240,19 @@
 }
 
 .vue-simple-suggest-wrapper {
-  width: 40%;
-  height: 100%;
-  margin-top: 70px;
+  /* display: flex;
+  justify-content: space-between; */
+  margin-top: 50px;
+  /* width: 600px; */
+}
+.WrapperAsFlexbox {
+  display: flex;
+  justify-content: space-around;
+  /* justify-content: flex-end; */
 }
 .vue-simple-suggest-form {
   display: inline-block;
-  width: 70%;
-  height: 100%;
+  width: 40%;
 }
 
 #result-list-wrapper {
@@ -278,12 +291,15 @@
 .list-item {
   display: inline-block;
   position: relative;
-  font-size: 200%;
+  font-size: 100%;
   font: bold;
-  padding: 10px 25px;
+  padding: 15px 15px;
   background-color: lightcyan;
-  margin-right: 35px;
+  margin-right: 20px;
+  margin-top: 10px;
   border-radius: 10px;
+}
+.list-item-wrapper {
 }
 .list-item :hover {
   background-color: aqua;
@@ -296,12 +312,12 @@
   animation: all 5s;
 }
 .hama-close {
-  font-size: 120%;
+  font-size: 100%;
 }
 
 /* 追加するスキルを検索するフォーム */
 .mb-3 {
-  width: 300%;
+  width: 100%;
 }
 
 /* 追加ボタンのラッパー */
@@ -313,7 +329,7 @@
 
 #carrerSearchFormWrapper {
   display: inline-block;
-  width: 40%;
+  width: 100%;
 }
 
 #button-addon2 {
@@ -351,8 +367,8 @@
 
 #skillLevelWrapper {
   display: inline-block;
-  width: 20%;
-  margin: 0 5% 0 10%;
+
+  margin: 0 2%;
 }
 
 fieldset {

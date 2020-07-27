@@ -31,10 +31,10 @@
 
 
 {{-- popper.js CDN --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/cjs/popper-base.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/cjs/popper-base.min.js"></script> --}}
 
 
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> --}}
 
 
 

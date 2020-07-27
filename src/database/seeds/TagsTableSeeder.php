@@ -15,7 +15,12 @@ class TagsTableSeeder extends Seeder
         //開発者側で、ユーザーが選択できるスキルTagを予め用意しておく。
         //TODO ユーザーがスキルTagを自由に追加できるようにする。
 
-        $skillTags = ['Objective-C', 'Holon', 'Kotlin', 'Go', 'Vue.js', 'React', 'Swift', 'TypeScript', 'C言語', 'C++', 'C#', 'VisualBasic']; //追加したいスキル
+
+        $skillTags = ['VBScript', 'Clojure', 'F#', 'Elixir', 'Pascal', 'LISP', 'Lua', 'Haskell', 'Groovy', 'ActionScript', 'Smalltalk', 'TypeScript', 'Processing', 'MATLAB', 'Hack', 'Bash', 'Mathematica', 'BASIC', 'Erlang', 'ES6', 'PowerShell', 'FORTRAN', 'shell(C・B・K)', 'JavaScript', 'VBA', 'VisualC', 'VisualC++', 'VisualJ#', 'Visual Basic .NET', 'Visual C# .NET', 'Visual C++ .NET', 'Visual J# .NET', 'ASP.NET', 'Delphi', 'SQL', 'Perl', 'Coldfusion', 'J2EE・J2SE・J2ME', 'JSP', 'EJB・JavaBeans', 'XML', 'Flash', 'ABAP/4', 'COBOL', 'PL/1', 'RPG', 'アセンブラ', 'Scala', 'Go', 'R言語', 'Dart']; //追加したいスキル
+
+        // 注意！！　過去に追加したスキルを以下に明記していく
+        //Java,PHP,Ruby,Objective-C ,Holon, Kotlin, Go, Vue.js, React, Swift, TypeScript, C言語, C++, C#, VisualBasic
+        //'VBScript', 'Clojure', 'F#', 'Elixir', 'Pascal', 'LISP', 'Lua', 'Haskell', 'Groovy', 'ActionScript', 'Smalltalk', 'TypeScript', 'Processing', 'MATLAB', 'Hack', 'Bash', 'Mathematica', 'BASIC', 'Erlang', 'ES6', 'PowerShell', 'FORTRAN', 'shell(C・B・K)', 'JavaScript', 'VBA', 'VisualC', 'VisualC++', 'VisualJ#', 'Visual Basic .NET', 'Visual C# .NET', 'Visual C++ .NET', 'Visual J# .NET', 'ASP.NET', 'Delphi', 'SQL', 'Perl', 'Coldfusion', 'J2EE・J2SE・J2ME', 'JSP', 'EJB・JavaBeans', 'XML', 'Flash', 'ABAP/4', 'COBOL', 'PL/1', 'RPG', 'アセンブラ', 'Scala', 'Go', 'R言語', 'Dart'
 
         //各スキルをレベル1~3まで作成
         foreach ($skillTags as $skillTag) {
