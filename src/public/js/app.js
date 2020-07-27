@@ -1930,12 +1930,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -2167,6 +2161,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2176,54 +2200,78 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       selected: null,
-      simpleSuggestionList: ['Java', 'PHP', 'JavaScript', 'C++', 'Ruby', 'Swift', 'JavaEE', 'JDK', 'VSCode', 'object-c', 'TypeScript', 'Docker', 'GitHub', 'AWS', 'ER図', 'Python', 'Azure', 'aaa'],
+      simpleSuggestionList: [],
       toggle: false,
       searchWordLists: [],
-      resultLists: [] //ajaxから挿入
+      resultLists: [] //APIから挿入
 
     };
   },
   methods: {
     creatSearchTag: function creatSearchTag() {//
     },
+    clickSearchBtn: function clickSearchBtn(index) {
+      var _this = this;
+
+      this.searchWordLists.splice(index, 1); //検索スキルを削除したあと、配列が空なら全てのユーザーを表示させる。
+
+      if (this.searchWordLists.length == 0) {
+        this.getResult();
+        return;
+      }
+
+      var data = {
+        searchWord: this.searchWordLists
+      };
+      axios.post("/api/search_carrer/", data).then(function (res) {
+        _this.resultLists = res.data;
+      });
+    },
     // 押下した時にサーチして、getResult()を実行する。
     addSearchTag: function addSearchTag() {
-      var _this = this;
+      var _this2 = this;
 
       // タグ検索フォームを空にする
       $("#carrerSearchForm").val(""); //ユーザーが指定したタグを、タグ管理リスト(searchWordLists)に追加
+      //画面に選択したスキルTagを表示させるために、配列に格納する
 
-      this.searchWordLists.push(this.selected); // this.items.splice(this.items.length-1, 0,"Java");
-      // this.searchWordLists.splice(this.searchWordLists.length-1, 0,this.selected);
-      //this.searchWordLists.splice(this.searchWordLists.length-1, 0,'');
-      //リストにして渡したらいい感じになると思う。
-      //todo リストでコントローラーに渡して、適合する全てのtagのIDを取得すれば、OKなはず。
-      //todo　検索タグを、罰ボタンとかで消したら、同じくリストから削除して、再検索すればいい感じになる。
-      //その時のアニメーションをなめらか〜にする。
+      this.searchWordLists.push(this.selected); //JSONでデータのやり取りを行うためにJSON形式にする
+      //TODO 本当にこれはJSONか？
 
-      axios.get('/api/search_carrer?tag=' + this.searchWordLists) // axios.get('/api/search_carrer?tag=' + this.selected)
-      // this.searchWordListsの中身は配列
-      //PHP,Python,AWS,JavaScript
-      //.thenで通信が成功したあとの処理を記述している。
-      //引数のresは通信の結果、得たもの
-      .then(function (res) {
-        _this.resultLists = res.data; //res.dataで取得。引数に合わせてOK
+      var data = {
+        searchWord: this.searchWordLists
+      };
+      axios.post("/api/search_carrer/", data).then(function (res) {
+        // テストのため返り値をコンソールに表示
+        _this2.resultLists = res.data; // alert(res.data.success);
+        // alert("検索完了");
       });
     },
     getResult: function getResult() {
-      var _this2 = this;
+      var _this3 = this;
 
-      //パスはLaravelのルータ-に合わせることが出来る
-      axios.get('/api/show-all-user') //.thenで通信が成功したあとの処理を記述している。
-      //引数のresは通信の結果、得たもの
-      .then(function (res) {
-        _this2.resultLists = res.data; //res.dataで取得。引数に合わせてOK
+      axios.get("/api/show-all-user").then(function (res) {
+        _this3.resultLists = res.data; //res.dataで取得。引数に合わせてOK
+      });
+    },
+    getSuggestionListTags: function getSuggestionListTags() {
+      var _this4 = this;
+
+      axios.get("/api/getSuggestionListTags").then(function (res) {
+        var array = res.data.skillTags; //JSONで取得したオブジェクトを配列に格納し、検索フォームでサジェスチョンできるようにする。
+
+        for (var key in array) {
+          var ct_name = array[key].ct_name;
+
+          _this4.simpleSuggestionList.push(ct_name);
+        }
       });
     }
   },
-  //mounted()がページを読み込んだ時に行う処理？※マウントとは、既存のDOM要素をVue.jsが生成するDOM要素で置き換えること。
+  //mounted()がページを読み込んだ時に行う処理 ※マウントとは、既存のDOM要素をVue.jsが生成するDOM要素で置き換えること。
   mounted: function mounted() {
     this.getResult();
+    this.getSuggestionListTags();
   }
 });
 
@@ -2238,6 +2286,24 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2694,6 +2760,62 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2711,35 +2833,53 @@ __webpack_require__.r(__webpack_exports__);
         img_path: ""
       },
       selected: null,
-      simpleSuggestionList: ['Java', 'PHP', 'JavaScript', 'C++', 'Ruby', 'Swift', 'JavaEE', 'JDK', 'VSCode', 'object-c', 'TypeScript', 'Docker', 'GitHub', 'AWS', 'ER図', 'Python', 'Azure', 'aaa'],
+      simpleSuggestionList: [],
       toggle: false,
-      searchWordLists: []
+      searchWordLists: [],
+      //実行順番を制御しないといけないためにユーザー情報とスキル情報は別に管理する必要があった。そのためにスキル情報を管理する配列を宣言する。
+      postSkillData: [{
+        name: "",
+        skillName: "",
+        skillLevel: ""
+      }]
     };
   },
   methods: {
+    //ユーザー登録
     createUser: function createUser() {
       var _this = this;
 
       var formData = new FormData();
-      formData.append('img_path', this.user.img_path);
-      formData.append('name', this.user.name);
-      formData.append('se_career', this.user.se_career);
-      formData.append('introduction', this.user.introduction);
-      formData.append('email', this.user.email);
-      formData.append('password', this.user.password); // axios.post('/api/user',formData).then(response =>{
-      //     console.log(response)
-      // });
+      formData.append("img_path", this.user.img_path);
+      formData.append("name", this.user.name);
+      formData.append("se_career", this.user.se_career);
+      formData.append("introduction", this.user.introduction);
+      formData.append("email", this.user.email);
+      formData.append("password", this.user.password); //登録ボタン押下時に、Controller側でDB参照時に使用するユーザー名を、スキル情報を格納するpostSkillDataに格納する
 
+      this.postSkillData[0].name = this.user.name;
       axios.post("/api/user", formData).then(function (response) {
-        console.log(response.data.success);
-        _this.img_path = "";
-        _this.name = "";
-        _this.se_career = "";
-        _this.introduction = "";
-        _this.email = "";
-        _this.password = "";
-        alert("登録しました");
-        location.href = "http://localhost:10080/user";
+        alert("ユーザー登録しました"); //別のメソッドを呼び、axiosの実行順番を制御（ユーザー登録の処理が完了した後に、スキル情報登録の処理を実行したい）
+
+        _this.postSkillInfos();
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    //スキル登録
+    postSkillInfos: function postSkillInfos() {
+      var _this2 = this;
+
+      axios.get("/api/skillInfos/", {
+        params: this.postSkillData
+      }).then(function (response) {
+        _this2.img_path = "";
+        _this2.name = "";
+        _this2.se_career = "";
+        _this2.introduction = "";
+        _this2.email = "";
+        _this2.password = "";
+        alert("スキル登録が完了しました。"); // location.href = "http://localhost:10080/user";
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -2749,17 +2889,49 @@ __webpack_require__.r(__webpack_exports__);
     },
     addSearchTag: function addSearchTag() {
       // タグ検索フォームを空にする
-      $("#carrerSearchForm").val(""); //ユーザーが指定したタグを、タグ管理リスト(searchWordLists)に追加
+      $("#carrerSearchForm").val(""); //スキルレベルのラジオボタンの値を取得
+
+      var elements = document.getElementsByName("accessible-radio"); //選択されたレベルをチェック
+
+      var selectSkillLevel = 0;
+
+      if (elements[0].checked == true) {
+        selectSkillLevel = 1;
+      } else if (elements[1].checked == true) {
+        selectSkillLevel = 2;
+      } else if (elements[2].checked == true) {
+        selectSkillLevel = 3;
+      } else {
+        alert("レベルを正しく選択してください。");
+      } //ユーザーが選択したスキル情報を、オブジェクトを内包する配列に格納→Controllerで取り扱いやすくするため
+
+
+      this.postSkillData.push({
+        name: "",
+        skillName: this.selected,
+        skillLevel: selectSkillLevel
+      }); //ユーザーが指定したスキルを可視化できるように格納
 
       this.searchWordLists.push(this.selected);
     },
     creatSearchTag: function creatSearchTag() {//
     },
-    mounted: function mounted() {
-      $('#option1').click(function () {
-        $(this).button('toggle');
+    getSuggestionListTags: function getSuggestionListTags() {
+      var _this3 = this;
+
+      axios.get("/api/getSuggestionListTags").then(function (res) {
+        var array = res.data.skillTags; //JSONで取得したオブジェクトを配列に格納し、検索フォームでサジェスチョンできるようにする。
+
+        for (var key in array) {
+          var ct_name = array[key].ct_name;
+
+          _this3.simpleSuggestionList.push(ct_name);
+        }
       });
     }
+  },
+  mounted: function mounted() {
+    this.getSuggestionListTags();
   }
 });
 
@@ -3051,30 +3223,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3108,22 +3256,27 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         return console.log(error);
       });
+    },
+    getUserSkills: function getUserSkills() {
+      var _this2 = this;
+
+      //ユーザーのスキル情報を取得
+      //コントローラーからのレスポンスデータを「usersテーブル」と「Tags」テーブルで分けて受け取るので、２回axiosを実行する
+      axios.get("/api/userSkills/" + this.user.id).then(function (response) {
+        _this2.tags = response.data; // alert("スキルを読み込んだ");
+      })["catch"](function (erorr) {
+        return console.log(error);
+      });
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     axios.get("/api/user/" + this.id).then(function (response) {
-      return _this2.user = response.data.user;
-    })["catch"](function (erorr) {
-      return console.log(error);
-    }); //ユーザースキルを取得
-    //コントローラーからのレスポンスデータを「usersテーブル」と「Tags」テーブルで分けて受け取る方法が不明なので２回axiosを実行する
-    //TODO 上記の改善策があればよりシンプルなコードに直す。
-    //TODO 中間テーブルがデータ不足のため、とりあえず、Tagsテーブルの全てのデータを読み取る    
+      _this3.user = response.data.user;
 
-    axios.get("/api/userTag").then(function (response) {
-      return _this2.tags = response.data;
+      _this3.getUserSkills(); // alert("UserDataを読み込んだ");
+
     })["catch"](function (erorr) {
       return console.log(error);
     });
@@ -3141,6 +3294,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_simple_suggest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-simple-suggest */ "./node_modules/vue-simple-suggest/dist/es6.js");
+/* harmony import */ var vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-simple-suggest/dist/styles.css */ "./node_modules/vue-simple-suggest/dist/styles.css");
+/* harmony import */ var vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -3477,7 +3633,132 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    VueSimpleSuggest: vue_simple_suggest__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       id: this.$route.params.id,
@@ -3489,7 +3770,17 @@ __webpack_require__.r(__webpack_exports__);
         introduction: "",
         img_path: ""
       },
-      tags: []
+      tags: [],
+      selected: null,
+      postSkillDeleteData: [],
+      simpleSuggestionList: [],
+      searchWordLists: [],
+      //実行順番を制御しないといけないためにユーザー情報とスキル情報は別に管理する必要があった。そのためにスキル情報を管理する配列を宣言する。
+      postSkillData: [{
+        name: "",
+        skillName: "",
+        skillLevel: ""
+      }]
     };
   },
   methods: {
@@ -3499,7 +3790,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.patch("/api/user/" + this.user.id, {
         user: this.user
       }).then(function (response) {
-        _this.user = response.data.user;
+        _this.user = response.data.user; //this.$router.pushで画面遷移　同時にparamsも持たせることができる。(便利！)
 
         _this.$router.push({
           name: "user_detail",
@@ -3510,25 +3801,108 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         return console.log(error);
       });
+    },
+    skillDelete: function skillDelete(id) {
+      var _this2 = this;
+
+      this.postSkillDeleteData.push({
+        userId: this.user.id,
+        skillId: id
+      });
+      axios.get("/api/skillDelete/", {
+        params: this.postSkillDeleteData
+      }).then(function (response) {
+        _this2.tags.slice(id, 1); //TODO 画面遷移先を編集画面のままにする。
+        //画面が詳細画面に遷移してしまうのは、<form @submit.prevent="updateUser">で、
+        //           this.$router.push({
+        //   name: "user_detail",
+        //   params: { id: this.$route.params.id },
+        // });
+        //してしまっているから。これを変更すると、ユーザー情報を更新したあとも、この画面に留まってしまうことになるので、要相談。
+
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    //ユーザースキルを取得
+    getUserSkills: function getUserSkills() {
+      var _this3 = this;
+
+      axios.get("/api/userSkills/" + this.user.id).then(function (response) {
+        _this3.tags = response.data;
+      })["catch"](function (erorr) {
+        return console.log(error);
+      });
+    },
+    creatSearchTag: function creatSearchTag() {//
+    },
+    addSearchTag: function addSearchTag() {
+      // タグ検索フォームを空にする
+      $("#carrerSearchForm").val(""); //スキルレベルのラジオボタンの値を取得
+
+      var elements = document.getElementsByName("accessible-radio"); //選択されたレベルをチェック
+
+      var selectSkillLevel = 0;
+
+      if (elements[0].checked == true) {
+        selectSkillLevel = 1;
+      } else if (elements[1].checked == true) {
+        selectSkillLevel = 2;
+      } else if (elements[2].checked == true) {
+        selectSkillLevel = 3;
+      } else {
+        alert("レベルを正しく選択してください。");
+      } //ユーザーが選択したスキル情報を、オブジェクトを内包する配列に格納→Controllerで取り扱いやすくするため
+
+
+      this.postSkillData.push({
+        name: "",
+        skillName: this.selected,
+        skillLevel: selectSkillLevel
+      }); //ユーザーが指定したスキルを可視化できるように格納
+
+      this.searchWordLists.push(this.selected);
+    },
+    //スキル登録
+    postSkillInfos: function postSkillInfos() {
+      var _this4 = this;
+
+      //追加ボタン押下時に、Controller側でDB参照時に使用するユーザー名を、スキル情報を格納するpostSkillDataに格納する
+      this.postSkillData[0].name = this.user.name;
+      axios.get("/api/skillInfos/", {
+        params: this.postSkillData
+      }).then(function (response) {
+        alert("スキル登録が完了しました。");
+        location.href = "http://localhost:10080/user/" + _this4.user.id;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    getSuggestionListTags: function getSuggestionListTags() {
+      var _this5 = this;
+
+      axios.get("/api/getSuggestionListTags").then(function (res) {
+        var array = res.data.skillTags; //JSONで取得したオブジェクトを配列に格納し、検索フォームでサジェスチョンできるようにする。
+
+        for (var key in array) {
+          var ct_name = array[key].ct_name;
+
+          _this5.simpleSuggestionList.push(ct_name);
+        }
+      });
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this6 = this;
 
     axios.get("/api/user/" + this.id).then(function (response) {
-      return _this2.user = response.data.user;
-    })["catch"](function (erorr) {
-      return console.log(error);
-    }); //ユーザースキルを取得
-    //コントローラーからのレスポンスデータを「usersテーブル」と「Tags」テーブルで分けて受け取る方法が不明なので２回axiosを実行する
-    //TODO 上記の改善策があればよりシンプルなコードに直す。
-    //TODO 中間テーブルがデータ不足のため、とりあえず、Tagsテーブルの全てのデータを読み取る    
+      _this6.user = response.data.user;
 
-    axios.get("/api/userTag").then(function (response) {
-      return _this2.tags = response.data;
+      _this6.getUserSkills();
     })["catch"](function (erorr) {
       return console.log(error);
     });
+    this.getSuggestionListTags();
   }
 });
 
@@ -3565,7 +3939,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.container[data-v-89b0c3cc]{\n    width: 100%;\n    text-align: center;\n}\n.card[data-v-89b0c3cc]{\n    display: inline-block;\n    width: 25%;\n    margin: 20px;\n    background-color: cornflowerblue;\n   \n    /*todo　背景色の変化でレベル分けを表現するのが簡単だった。*/\n}\n.vue-simple-suggest-wrapper[data-v-89b0c3cc]{\n    width: 40%;\n    height: 100%;\n    margin: 50px auto;\n}\n.vue-simple-suggest-form[data-v-89b0c3cc]{\n    display: inline-block;\n    width: 70%;\n    height: 100%;\n}\n#button-addon2[data-v-89b0c3cc]{\n    color: aliceblue;\n    font: bolder;\n}\n#result-list-wrapper[data-v-89b0c3cc]{\n    display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n\n/* hamada　アニメーション実験*/\n.bounce-enter-active[data-v-89b0c3cc] {\n  -webkit-animation: bounce-in-data-v-89b0c3cc .5s;\n          animation: bounce-in-data-v-89b0c3cc .5s;\n}\n.bounce-leave-active[data-v-89b0c3cc] {\n  animation: bounce-in-data-v-89b0c3cc .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-89b0c3cc]{\n    width: 100%;\n}\n.selected-tag-with-anime[data-v-89b0c3cc]{\n    display: inline-block;\n    width:600px;\n    padding: 20px;\n    font-size: 160%;\n    background-color: red;\n    border-radius: 15px;\n}\n/*実験２ */\n.list-item[data-v-89b0c3cc] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font:bold;\n  padding: 10px 25px;\n  background-color: red;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-89b0c3cc] :hover{\nbackground-color: aqua;\n}\n.close[data-v-89b0c3cc]{\n    position: absolute;\n    right: -12px;\n    top: -12px;\n    opacity: 0.2;\n    -webkit-animation: all 5s;\n            animation: all 5s;\n}\n.hama-close[data-v-89b0c3cc]{\n    font-size: 120%;\n}\n.list-enter-active[data-v-89b0c3cc]{\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-89b0c3cc .5s;\n          animation: bounce-in-data-v-89b0c3cc .5s;\n}\n.list-leave-active[data-v-89b0c3cc] {\n  animation: bounce-in-data-v-89b0c3cc .5s reverse;\n}\n.list-enter[data-v-89b0c3cc], .list-leave-to[data-v-89b0c3cc] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.container[data-v-89b0c3cc] {\n  width: 100%;\n  text-align: center;\n}\n.card[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 25%;\n  margin: 20px;\n  background-color: cornflowerblue;\n\n  /*todo　背景色の変化でレベル分けを表現するのが簡単だった。*/\n}\n.vue-simple-suggest-wrapper[data-v-89b0c3cc] {\n  display: flex;\n  justify-content: center;\n}\n.vue-simple-suggest-form[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 35%;\n}\n#button-addon2[data-v-89b0c3cc] {\n  color: aliceblue;\n  font: bolder;\n}\n#result-list-wrapper[data-v-89b0c3cc] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n\n/* hamada　アニメーション実験*/\n.bounce-enter-active[data-v-89b0c3cc] {\n  -webkit-animation: bounce-in-data-v-89b0c3cc 0.5s;\n          animation: bounce-in-data-v-89b0c3cc 0.5s;\n}\n.bounce-leave-active[data-v-89b0c3cc] {\n  animation: bounce-in-data-v-89b0c3cc 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-89b0c3cc] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-89b0c3cc] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.list-item[data-v-89b0c3cc] :hover {\n  background-color: aqua;\n}\n.close[data-v-89b0c3cc] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-89b0c3cc] {\n  font-size: 120%;\n}\n.list-enter-active[data-v-89b0c3cc] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-89b0c3cc 0.5s;\n          animation: bounce-in-data-v-89b0c3cc 0.5s;\n}\n.list-leave-active[data-v-89b0c3cc] {\n  animation: bounce-in-data-v-89b0c3cc 0.5s reverse;\n}\n.list-enter[data-v-89b0c3cc], .list-leave-to[data-v-89b0c3cc] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-89b0c3cc] {\n  display: inline-block;\n  margin: 0 3%;\n}\n", ""]);
 
 // exports
 
@@ -3584,7 +3958,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 72%;\n}\n.user-form-left-top[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 100%;\n}\n#name-form[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 60%;\n}\n#se-career-form[data-v-46aa920a]{\ndisplay: inline-block;\n/* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n/* width: 50%; */\n}\n#introduction-form[data-v-46aa920a]{\ndisplay: inline-block;\nmargin-top: 3%;\nwidth: 100%;\n}\n.user-form-right[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 23%;\nmargin-left: 3%;\n}\n#user-image[data-v-46aa920a]{\nwidth: 94%;\npadding: 1%;\nborder: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a]{\ntext-align: center;\n}\n#upload-image-btn[data-v-46aa920a]{\nwidth: 70%;\nmargin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-46aa920a]{\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-46aa920a]{\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-46aa920a]{\n  display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-46aa920a] {\n-webkit-animation: bounce-in-data-v-46aa920a .5s;\n        animation: bounce-in-data-v-46aa920a .5s;\n}\n.bounce-leave-active[data-v-46aa920a] {\nanimation: bounce-in-data-v-46aa920a .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-46aa920a]{\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-46aa920a]{\n  display: inline-block;\n  width:600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-46aa920a] {\ndisplay: inline-block;\nposition: relative;\nfont-size: 200%;\nfont:bold;\npadding: 10px 25px;\nbackground-color: lightcyan;\nmargin-right: 35px;\nborder-radius: 10px;\n}\n.list-item[data-v-46aa920a] :hover{\nbackground-color: aqua;\n}\n.close[data-v-46aa920a]{\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-46aa920a]{\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-46aa920a]{\nwidth:300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a]{\ndisplay: inline-block;\nmargin: 0 5%;\nwidth: 10%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 40%;\n}\n#button-addon2[data-v-46aa920a]{\ndisplay: inline-block;\ncolor: aliceblue;\nfont: bolder;\nbackground: green;\n}\n.list-enter-active[data-v-46aa920a]{\n/* transition: all 1s; */\n-webkit-animation: bounce-in-data-v-46aa920a .5s;\n        animation: bounce-in-data-v-46aa920a .5s;\n}\n.list-leave-active[data-v-46aa920a] {\nanimation: bounce-in-data-v-46aa920a .5s reverse;\n}\n.list-enter[data-v-46aa920a], .list-leave-to[data-v-46aa920a] /* .list-leave-active for below version 2.1.8 */ {\nopacity: 0;\ntransform: translateY(30px);\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 20%;\nmargin: 0 5% 0 10%;\n}\nfieldset[data-v-46aa920a] {\ndisplay: inline-block;\nborder: none;\ntext-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\nmargin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all .2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-46aa920a] {\n  background: #FF8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0,0,0,.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n  outline-color: #4D90FE;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a]{\ntext-align: center;\nmargin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a]{\ndisplay: inline-block;\nwidth: 20%;\nfont-size: 130%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-46aa920a] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-46aa920a] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-46aa920a] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-46aa920a] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-46aa920a] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n}\n#upload-image-btn[data-v-46aa920a] {\n  width: 70%;\n  margin: 0 auto;\n}\n\n/* flexboxを使ってみる */\n.vue-simple-suggest-wrapper[data-v-46aa920a] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n.vue-simple-suggest-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 40%;\n}\n#result-list-wrapper[data-v-46aa920a] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-46aa920a] {\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.bounce-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-46aa920a] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-46aa920a] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-46aa920a] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.list-item-wrapper[data-v-46aa920a] {\n}\n.list-item[data-v-46aa920a] :hover {\n  background-color: aqua;\n}\n.close[data-v-46aa920a] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-46aa920a] {\n  font-size: 100%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-46aa920a] {\n  width: 100%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 20%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#button-addon2[data-v-46aa920a] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-46aa920a] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.list-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n.list-enter[data-v-46aa920a], .list-leave-to[data-v-46aa920a] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 2%;\n}\nfieldset[data-v-46aa920a] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-46aa920a] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
 
 // exports
 
@@ -3603,7 +3977,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 72%;\n}\n.user-form-left-top[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 100%;\n}\n#name-form[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 60%;\n}\n#se-career-form[data-v-8cf8dc74]{\ndisplay: inline-block;\n/* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n/* width: 50%; */\n}\n#introduction-form[data-v-8cf8dc74]{\ndisplay: inline-block;\nmargin-top: 3%;\nwidth: 100%;\n}\n.user-form-right[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 23%;\nmargin-left: 3%;\n}\n#user-image[data-v-8cf8dc74]{\nwidth: 94%;\npadding: 1%;\nborder: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-8cf8dc74]{\ntext-align: center;\n}\n#upload-image-btn[data-v-8cf8dc74]{\nwidth: 70%;\nmargin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-8cf8dc74]{\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-8cf8dc74]{\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-8cf8dc74]{\n  display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-8cf8dc74] {\n-webkit-animation: bounce-in-data-v-8cf8dc74 .5s;\n        animation: bounce-in-data-v-8cf8dc74 .5s;\n}\n.bounce-leave-active[data-v-8cf8dc74] {\nanimation: bounce-in-data-v-8cf8dc74 .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-8cf8dc74]{\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-8cf8dc74]{\n  display: inline-block;\n  width:600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-8cf8dc74] {\ndisplay: inline-block;\nposition: relative;\nfont-size: 200%;\nfont:bold;\npadding: 10px 25px;\nbackground-color: lightcyan;\nmargin-right: 35px;\nborder-radius: 10px;\n}\n.list-item[data-v-8cf8dc74] :hover{\nbackground-color: aqua;\n}\n.close[data-v-8cf8dc74]{\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-8cf8dc74]{\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-8cf8dc74]{\nwidth:300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-8cf8dc74]{\ndisplay: inline-block;\nmargin: 0 5%;\nwidth: 10%;\n}\n#carrerSearchFormWrapper[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 40%;\n}\n#button-addon2[data-v-8cf8dc74]{\ndisplay: inline-block;\ncolor: aliceblue;\nfont: bolder;\nbackground: green;\n}\n.list-enter-active[data-v-8cf8dc74]{\n/* transition: all 1s; */\n-webkit-animation: bounce-in-data-v-8cf8dc74 .5s;\n        animation: bounce-in-data-v-8cf8dc74 .5s;\n}\n.list-leave-active[data-v-8cf8dc74] {\nanimation: bounce-in-data-v-8cf8dc74 .5s reverse;\n}\n.list-enter[data-v-8cf8dc74], .list-leave-to[data-v-8cf8dc74] /* .list-leave-active for below version 2.1.8 */ {\nopacity: 0;\ntransform: translateY(30px);\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 20%;\nmargin: 0 5% 0 10%;\n}\nfieldset[data-v-8cf8dc74] {\ndisplay: inline-block;\nborder: none;\ntext-align: center;\n}\n.radio-inline__input[data-v-8cf8dc74] {\nmargin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-8cf8dc74] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all .2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-8cf8dc74] {\n  background: #FF8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0,0,0,.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-8cf8dc74] {\n  outline-color: #4D90FE;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-8cf8dc74]{\ntext-align: center;\nmargin-top: 100px;\n}\n#registrate-btn[data-v-8cf8dc74]{\ndisplay: inline-block;\nwidth: 20%;\nfont-size: 130%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-8cf8dc74] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-8cf8dc74] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-8cf8dc74] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n}\n#upload-image-btn[data-v-8cf8dc74] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-8cf8dc74] {\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-8cf8dc74] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-8cf8dc74] {\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.bounce-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-8cf8dc74] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-8cf8dc74] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font: bold;\n  padding: 10px 25px;\n  background-color: lightcyan;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-8cf8dc74] :hover {\n  background-color: aqua;\n}\n.close[data-v-8cf8dc74] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-8cf8dc74] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-8cf8dc74] {\n  width: 300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-8cf8dc74] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-8cf8dc74] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-8cf8dc74] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.list-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n.list-enter[data-v-8cf8dc74], .list-leave-to[data-v-8cf8dc74] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n  margin: 0 5% 0 10%;\n}\nfieldset[data-v-8cf8dc74] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-8cf8dc74] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-8cf8dc74] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-8cf8dc74] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-8cf8dc74] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
 
 // exports
 
@@ -3622,7 +3996,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 72%;\n}\n.user-form-left-top[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 100%;\n}\n#name-form[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 60%;\n}\n#se-career-form[data-v-03e6892d]{\ndisplay: inline-block;\n/* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n/* width: 50%; */\n}\n#introduction-form[data-v-03e6892d]{\ndisplay: inline-block;\nmargin-top: 3%;\nwidth: 100%;\n}\n.user-form-right[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 23%;\nmargin-left: 3%;\n}\n#user-image[data-v-03e6892d]{\nwidth: 94%;\npadding: 1%;\nborder: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-03e6892d]{\ntext-align: center;\n}\n#upload-image-btn[data-v-03e6892d]{\nwidth: 70%;\nmargin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-03e6892d]{\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-03e6892d]{\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-03e6892d]{\n  display: inline-block;/*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-03e6892d] {\n-webkit-animation: bounce-in-data-v-03e6892d .5s;\n        animation: bounce-in-data-v-03e6892d .5s;\n}\n.bounce-leave-active[data-v-03e6892d] {\nanimation: bounce-in-data-v-03e6892d .5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-03e6892d {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-03e6892d]{\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-03e6892d]{\n  display: inline-block;\n  width:600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-03e6892d] {\ndisplay: inline-block;\nposition: relative;\nfont-size: 200%;\nfont:bold;\npadding: 10px 25px;\nbackground-color: lightcyan;\nmargin-right: 35px;\nborder-radius: 10px;\n}\n.list-item[data-v-03e6892d] :hover{\nbackground-color: aqua;\n}\n.close[data-v-03e6892d]{\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-03e6892d]{\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-03e6892d]{\nwidth:300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-03e6892d]{\ndisplay: inline-block;\nmargin: 0 5%;\nwidth: 10%;\n}\n#carrerSearchFormWrapper[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 40%;\n}\n#button-addon2[data-v-03e6892d]{\ndisplay: inline-block;\ncolor: aliceblue;\nfont: bolder;\nbackground: green;\n}\n.list-enter-active[data-v-03e6892d]{\n/* transition: all 1s; */\n-webkit-animation: bounce-in-data-v-03e6892d .5s;\n        animation: bounce-in-data-v-03e6892d .5s;\n}\n.list-leave-active[data-v-03e6892d] {\nanimation: bounce-in-data-v-03e6892d .5s reverse;\n}\n.list-enter[data-v-03e6892d], .list-leave-to[data-v-03e6892d] /* .list-leave-active for below version 2.1.8 */ {\nopacity: 0;\ntransform: translateY(30px);\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n  transform: scale(0);\n}\n50% {\n  transform: scale(1.5);\n}\n100% {\n  transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 20%;\nmargin: 0 5% 0 10%;\n}\nfieldset[data-v-03e6892d] {\ndisplay: inline-block;\nborder: none;\ntext-align: center;\n}\n.radio-inline__input[data-v-03e6892d] {\nmargin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-03e6892d] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all .2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-03e6892d] {\n  background: #FF8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0,0,0,.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-03e6892d] {\n  outline-color: #4D90FE;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-03e6892d]{\ntext-align: center;\nmargin-top: 100px;\n}\n#registrate-btn[data-v-03e6892d]{\ndisplay: inline-block;\nwidth: 20%;\nfont-size: 130%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-03e6892d] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-03e6892d] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-03e6892d] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-03e6892d] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-03e6892d] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-03e6892d] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-03e6892d] {\n  text-align: center;\n}\n#upload-image-btn[data-v-03e6892d] {\n  width: 70%;\n  margin: 0 auto;\n}\n\n/* flexboxを使ってみる */\n.vue-simple-suggest-wrapper[data-v-03e6892d] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n.vue-simple-suggest-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 40%;\n}\n#result-list-wrapper[data-v-03e6892d] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-03e6892d] {\n  -webkit-animation: bounce-in-data-v-03e6892d 0.5s;\n          animation: bounce-in-data-v-03e6892d 0.5s;\n}\n.bounce-leave-active[data-v-03e6892d] {\n  animation: bounce-in-data-v-03e6892d 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-03e6892d] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-03e6892d] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-03e6892d] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.list-item[data-v-03e6892d] :hover {\n  background-color: aqua;\n}\n.close[data-v-03e6892d] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-03e6892d] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-03e6892d] {\n  width: 100%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-03e6892d] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 20%;\n}\n#carrerSearchFormWrapper[data-v-03e6892d] {\n  display: inline-block;\n  width: 100%;\n}\n#button-addon2[data-v-03e6892d] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-03e6892d] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-03e6892d 0.5s;\n          animation: bounce-in-data-v-03e6892d 0.5s;\n}\n.list-leave-active[data-v-03e6892d] {\n  animation: bounce-in-data-v-03e6892d 0.5s reverse;\n}\n.list-enter[data-v-03e6892d], .list-leave-to[data-v-03e6892d] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-03e6892d] {\n  display: inline-block;\n  margin: 0 2%;\n}\nfieldset[data-v-03e6892d] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-03e6892d] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-03e6892d] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-03e6892d] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-03e6892d] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-03e6892d] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-03e6892d] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n#submitBtnWrapper[data-v-03e6892d] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n#submitBtn[data-v-03e6892d] {\n  flex-basis: 20%;\n}\n", ""]);
 
 // exports
 
@@ -22032,25 +22406,25 @@ var render = function() {
                     placeholder: "Search",
                     "aria-label": "Recipient's username",
                     "aria-describedby": "button-addon2",
-                    id: "carrerSearchForm",
-                    autocomplete: "off"
+                    autocomplete: "off",
+                    id: "carrerSearchForm"
                   }
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group-append" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-outline-secondary btn-info",
-                      attrs: { type: "button", id: "button-addon2" },
-                      on: { click: _vm.addSearchTag }
-                    },
-                    [_vm._v("追加")]
-                  )
-                ])
+                })
               ])
             ]
-          )
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group-append" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-secondary btn-info",
+                attrs: { type: "button", id: "button-addon2" },
+                on: { click: _vm.addSearchTag }
+              },
+              [_vm._v("追加")]
+            )
+          ])
         ],
         1
       ),
@@ -22061,7 +22435,7 @@ var render = function() {
           _c(
             "transition-group",
             { attrs: { name: "list", tag: "p" } },
-            _vm._l(_vm.searchWordLists, function(searchWordList) {
+            _vm._l(_vm.searchWordLists, function(searchWordList, index) {
               return _c(
                 "span",
                 { key: searchWordList, staticClass: "list-item" },
@@ -22070,7 +22444,12 @@ var render = function() {
                     "button",
                     {
                       staticClass: "close",
-                      attrs: { type: "button", "aria-label": "Close" }
+                      attrs: { type: "button", "aria-label": "Close" },
+                      on: {
+                        click: function($event) {
+                          return _vm.clickSearchBtn(index)
+                        }
+                      }
                     },
                     [
                       _c(
@@ -22114,9 +22493,7 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  _vm._v(
-                    "\n            " + _vm._s(searchWordList) + "\n            "
-                  )
+                  _vm._v("\n        " + _vm._s(searchWordList) + "\n      ")
                 ]
               )
             }),
@@ -22128,7 +22505,7 @@ var render = function() {
       _vm._v(" "),
       _vm._l(_vm.resultLists, function(resultList) {
         return _c("div", { attrs: { id: "result-list-wrapper" } }, [
-          _c("div", { staticClass: "card", staticStyle: { width: "18rem" } }, [
+          _c("div", { staticClass: "card", staticStyle: { width: "12rem" } }, [
             resultList.img_path === null
               ? _c("img", {
                   staticClass: "card-img-top",
@@ -22145,14 +22522,6 @@ var render = function() {
               [
                 _c("h5", { staticClass: "card-title" }, [
                   _vm._v(_vm._s(resultList.name))
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "card-text" }, [
-                  _vm._v(_vm._s(resultList.se_carrer))
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "card-text" }, [
-                  _vm._v(_vm._s(resultList.introduction))
                 ]),
                 _vm._v(" "),
                 _c(
@@ -22242,13 +22611,67 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-danger",
-                  on: {
-                    click: function($event) {
-                      return _vm.userDelete(index, user.id)
-                    }
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "modal",
+                    "data-target": "#exampleModal"
                   }
                 },
                 [_vm._v("Delete")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "modal fade",
+                  attrs: {
+                    id: "exampleModal",
+                    tabindex: "-1",
+                    role: "dialog",
+                    "aria-labelledby": "exampleModalLabel",
+                    "aria-hidden": "true"
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal-dialog",
+                      attrs: { role: "document" }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-content" }, [
+                        _vm._m(1, true),
+                        _vm._v(" "),
+                        _vm._m(2, true),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "modal-footer" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-secondary",
+                              attrs: { type: "button", "data-dismiss": "modal" }
+                            },
+                            [_vm._v("Close")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger",
+                              on: {
+                                click: function($event) {
+                                  return _vm.userDelete(index, user.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Delete")]
+                          )
+                        ])
+                      ])
+                    ]
+                  )
+                ]
               )
             ])
           ])
@@ -22278,6 +22701,26 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Delete")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("本当に削除しますか？")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body" }, [
+      _c("p", [_vm._v("削除してしまうと復元はできません。")])
+    ])
   }
 ]
 render._withStripped = true
@@ -22303,392 +22746,334 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", [
-      _c(
-        "form",
-        {
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.createUser($event)
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "form-row" }, [
-            _c("div", { staticClass: "user-form-left" }, [
-              _c("div", { staticClass: "user-form-left-top" }, [
-                _c(
-                  "div",
-                  { staticClass: "form-group", attrs: { id: "name-form" } },
-                  [
-                    _c("label", { attrs: { for: "name" } }, [_vm._v("氏名")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.user.name,
-                          expression: "user.name"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", placeholder: "氏名" },
-                      domProps: { value: _vm.user.name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.user, "name", $event.target.value)
-                        }
-                      }
-                    })
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group col-md-4",
-                    attrs: { id: "se-career-form" }
-                  },
-                  [
-                    _c("label", { attrs: { for: "se_career" } }, [
-                      _vm._v("エンジニア歴")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "select",
-                      {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.user.se_career,
-                            expression: "user.se_career"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        staticStyle: { width: "128%" },
-                        on: {
-                          change: function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.user,
-                              "se_career",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          }
-                        }
-                      },
-                      [
-                        _c("option", { attrs: { selected: "" } }, [
-                          _vm._v("Choose...")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "1" } }, [_vm._v("1")]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "2" } }, [_vm._v("2")]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "3" } }, [_vm._v("3")]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "4" } }, [_vm._v("4")]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "5" } }, [_vm._v("5")]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "6" } }, [
-                          _vm._v("6~10")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "7" } }, [_vm._v("10~")])
-                      ]
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
+      _c("form", [
+        _c("div", { staticClass: "form-row" }, [
+          _c("div", { staticClass: "user-form-left" }, [
+            _c("div", { staticClass: "user-form-left-top" }, [
               _c(
                 "div",
-                {
-                  staticClass: "form-group",
-                  attrs: { id: "introduction-form" }
-                },
+                { staticClass: "form-group", attrs: { id: "name-form" } },
                 [
-                  _c("label", { attrs: { for: "introduction" } }, [
-                    _vm._v("自己紹介")
-                  ]),
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("氏名")]),
                   _vm._v(" "),
-                  _c("textarea", {
+                  _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.user.introduction,
-                        expression: "user.introduction"
+                        value: _vm.user.name,
+                        expression: "user.name"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: {
-                      rows: "4",
-                      placeholder:
-                        "（例）フロントエンドが得意です。最近はAWSの勉強をはじめました。"
-                    },
-                    domProps: { value: _vm.user.introduction },
+                    attrs: { type: "text", placeholder: "氏名" },
+                    domProps: { value: _vm.user.name },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.user, "introduction", $event.target.value)
+                        _vm.$set(_vm.user, "name", $event.target.value)
                       }
                     }
                   })
                 ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "form-group col-md-4",
+                  attrs: { id: "se-career-form" }
+                },
+                [
+                  _c("label", { attrs: { for: "se_career" } }, [
+                    _vm._v("エンジニア歴")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.user.se_career,
+                          expression: "user.se_career"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      staticStyle: { width: "128%" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.user,
+                            "se_career",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { selected: "" } }, [
+                        _vm._v("Choose...")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "1" } }, [_vm._v("1")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "2" } }, [_vm._v("2")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "3" } }, [_vm._v("3")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "4" } }, [_vm._v("4")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "5" } }, [_vm._v("5")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "6" } }, [_vm._v("6~10")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "7" } }, [_vm._v("10~")])
+                    ]
+                  )
+                ]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "user-form-right" }, [
-              _c("label", { attrs: { for: "inputEmail4" } }, [
-                _vm._v("アイコン")
-              ]),
-              _vm._v(" "),
-              _c("img", {
-                attrs: { src: "/image/face2.jpg", alt: "", id: "user-image" }
-              }),
-              _vm._v(" "),
-              _c("div", { attrs: { id: "upload-image-btn-wrapper" } }, [
-                _c("div", { staticClass: "content" }, [
-                  _c("p", [
-                    _c("input", {
-                      attrs: { type: "file" },
-                      on: { change: _vm.imageSelect }
-                    })
-                  ])
+            _c(
+              "div",
+              { staticClass: "form-group", attrs: { id: "introduction-form" } },
+              [
+                _c("label", { attrs: { for: "introduction" } }, [
+                  _vm._v("自己紹介")
+                ]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.user.introduction,
+                      expression: "user.introduction"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    rows: "4",
+                    placeholder:
+                      "（例）フロントエンドが得意です。最近はAWSの勉強をはじめました。"
+                  },
+                  domProps: { value: _vm.user.introduction },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.user, "introduction", $event.target.value)
+                    }
+                  }
+                })
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "user-form-right" }, [
+            _c("label", { attrs: { for: "inputEmail4" } }, [
+              _vm._v("アイコン")
+            ]),
+            _vm._v(" "),
+            _c("img", {
+              attrs: { src: "/image/face2.jpg", alt: "", id: "user-image" }
+            }),
+            _vm._v(" "),
+            _c("div", { attrs: { id: "upload-image-btn-wrapper" } }, [
+              _c("div", { staticClass: "content" }, [
+                _c("p", [
+                  _c("input", {
+                    attrs: { type: "file" },
+                    on: { change: _vm.imageSelect }
+                  })
                 ])
               ])
             ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "vue-simple-suggest-wrapper" },
-            [
-              _c(
-                "vue-simple-suggest",
-                {
-                  staticClass: "vue-simple-suggest-form",
-                  attrs: {
-                    "min-length": 2,
-                    list: _vm.simpleSuggestionList,
-                    "filter-by-query": true,
-                    "aria-autocomplete": "off"
-                  },
-                  on: { "suggestion-click": _vm.creatSearchTag },
-                  model: {
-                    value: _vm.selected,
-                    callback: function($$v) {
-                      _vm.selected = $$v
-                    },
-                    expression: "selected"
-                  }
+          ])
+        ]),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "vue-simple-suggest-wrapper" },
+          [
+            _c(
+              "vue-simple-suggest",
+              {
+                staticClass: "vue-simple-suggest-form",
+                attrs: {
+                  "min-length": 2,
+                  list: _vm.simpleSuggestionList,
+                  "filter-by-query": true,
+                  "aria-autocomplete": "off"
                 },
-                [
-                  _c("div", { staticClass: "input-group mb-3" }, [
-                    _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          placeholder: "Search",
-                          "aria-label": "Recipient's username",
-                          "aria-describedby": "button-addon2",
-                          id: "carrerSearchForm",
-                          autocomplete: "off"
+                on: { "suggestion-click": _vm.creatSearchTag },
+                model: {
+                  value: _vm.selected,
+                  callback: function($$v) {
+                    _vm.selected = $$v
+                  },
+                  expression: "selected"
+                }
+              },
+              [
+                _c("div", { staticClass: "input-group mb-3" }, [
+                  _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        placeholder: "Search",
+                        "aria-label": "Recipient's username",
+                        "aria-describedby": "button-addon2",
+                        id: "carrerSearchForm",
+                        autocomplete: "off"
+                      }
+                    })
+                  ])
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group-append" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-secondary btn-info",
+                  attrs: { type: "button", id: "button-addon2" },
+                  on: { click: _vm.addSearchTag }
+                },
+                [_vm._v("追加")]
+              )
+            ])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c(
+          "div",
+          [
+            _c(
+              "transition-group",
+              {
+                staticClass: "list-item-wrapper",
+                attrs: { name: "list", tag: "div" }
+              },
+              _vm._l(_vm.searchWordLists, function(searchWordList, index) {
+                return _c(
+                  "span",
+                  { key: searchWordList, staticClass: "list-item" },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "close",
+                        attrs: { type: "button", "aria-label": "Close" },
+                        on: {
+                          click: function($event) {
+                            return _vm.searchWordLists.splice(index, 1)
+                          }
                         }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { attrs: { id: "skillLevelWrapper" } }, [
-                      _c("fieldset", [
-                        _c("input", {
-                          staticClass:
-                            "radio-inline__input btn-outline-primary",
-                          attrs: {
-                            id: "item-1",
-                            type: "radio",
-                            name: "accessible-radio",
-                            value: "item-1",
-                            checked: "checked"
-                          }
-                        }),
-                        _vm._v(" "),
+                      },
+                      [
                         _c(
-                          "label",
+                          "svg",
                           {
-                            staticClass: "radio-inline__label",
-                            attrs: { for: "item-1" }
+                            staticClass: "bi bi-x-circle hama-close",
+                            attrs: {
+                              width: "1em",
+                              height: "1em",
+                              viewBox: "0 0 16 16",
+                              fill: "currentColor",
+                              xmlns: "http://www.w3.org/2000/svg"
+                            }
                           },
                           [
-                            _vm._v(
-                              "\n                      1\n                  "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("input", {
-                          staticClass: "radio-inline__input",
-                          attrs: {
-                            id: "item-2",
-                            type: "radio",
-                            name: "accessible-radio",
-                            value: "item-2"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "label",
-                          {
-                            staticClass: "radio-inline__label",
-                            attrs: { for: "item-2" }
-                          },
-                          [
-                            _vm._v(
-                              "\n                      2\n                  "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("input", {
-                          staticClass: "radio-inline__input",
-                          attrs: {
-                            id: "item-3",
-                            type: "radio",
-                            name: "accessible-radio",
-                            value: "item-3"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "label",
-                          {
-                            staticClass: "radio-inline__label",
-                            attrs: { for: "item-3" }
-                          },
-                          [
-                            _vm._v(
-                              "\n                      3\n                  "
-                            )
+                            _c("path", {
+                              attrs: {
+                                "fill-rule": "evenodd",
+                                d:
+                                  "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("path", {
+                              attrs: {
+                                "fill-rule": "evenodd",
+                                d:
+                                  "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("path", {
+                              attrs: {
+                                "fill-rule": "evenodd",
+                                d:
+                                  "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
+                              }
+                            })
                           ]
                         )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-group-append" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-outline-secondary btn-info",
-                          attrs: { type: "button", id: "button-addon2" },
-                          on: { click: _vm.addSearchTag }
-                        },
-                        [_vm._v("追加")]
-                      )
-                    ])
-                  ])
-                ]
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
+                      ]
+                    ),
+                    _vm._v(
+                      "\n            " + _vm._s(searchWordList) + "\n          "
+                    )
+                  ]
+                )
+              }),
+              0
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { attrs: { id: "registrate-btn-wrapper" } }, [
           _c(
-            "div",
-            [
-              _c(
-                "transition-group",
-                { attrs: { name: "list", tag: "p" } },
-                _vm._l(_vm.searchWordLists, function(searchWordList, index) {
-                  return _c(
-                    "span",
-                    { key: searchWordList, staticClass: "list-item" },
-                    [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "close",
-                          attrs: { type: "button", "aria-label": "Close" },
-                          on: {
-                            click: function($event) {
-                              return _vm.searchWordLists.splice(index, 1)
-                            }
-                          }
-                        },
-                        [
-                          _c(
-                            "svg",
-                            {
-                              staticClass: "bi bi-x-circle hama-close",
-                              attrs: {
-                                width: "1em",
-                                height: "1em",
-                                viewBox: "0 0 16 16",
-                                fill: "currentColor",
-                                xmlns: "http://www.w3.org/2000/svg"
-                              }
-                            },
-                            [
-                              _c("path", {
-                                attrs: {
-                                  "fill-rule": "evenodd",
-                                  d:
-                                    "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("path", {
-                                attrs: {
-                                  "fill-rule": "evenodd",
-                                  d:
-                                    "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("path", {
-                                attrs: {
-                                  "fill-rule": "evenodd",
-                                  d:
-                                    "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
-                                }
-                              })
-                            ]
-                          )
-                        ]
-                      ),
-                      _vm._v(
-                        "\n          " + _vm._s(searchWordList) + "\n          "
-                      )
-                    ]
-                  )
-                }),
-                0
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm._m(0)
-        ]
-      )
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              attrs: {
+                type: "button",
+                id: "registrate-btn",
+                "data-toggle": "tooltip",
+                "data-placement": "top",
+                title: "登録します"
+              },
+              on: { click: _vm.createUser }
+            },
+            [_vm._v("登録する")]
+          )
+        ])
+      ])
     ])
   ])
 }
@@ -22697,15 +23082,57 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "registrate-btn-wrapper" } }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          attrs: { type: "submit", id: "registrate-btn" }
-        },
-        [_vm._v("登録する")]
-      )
+    return _c("div", { attrs: { id: "skillLevelWrapper" } }, [
+      _c("fieldset", { attrs: { id: "skillLevelFielfset" } }, [
+        _c("input", {
+          staticClass: "radio-inline__input btn-outline-primary",
+          attrs: {
+            id: "item-1",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-1",
+            checked: "checked"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-1" } },
+          [_vm._v("1")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input",
+          attrs: {
+            id: "item-2",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-2"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-2" } },
+          [_vm._v("2")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input",
+          attrs: {
+            id: "item-3",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-3"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-3" } },
+          [_vm._v("3")]
+        )
+      ])
     ])
   }
 ]
@@ -22847,12 +23274,15 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("br"),
+    _vm._v(" "),
     _c("br"),
     _vm._v(" "),
     _c("hr"),
     _vm._v(" "),
     _c("br"),
+    _vm._v(" "),
     _c("br"),
+    _vm._v(" "),
     _c("br"),
     _vm._v(" "),
     _c("table", { staticClass: "table table-hover" }, [
@@ -22915,7 +23345,7 @@ var render = function() {
           on: {
             submit: function($event) {
               $event.preventDefault()
-              return _vm.createUser($event)
+              return _vm.updateUser($event)
             }
           }
         },
@@ -23048,25 +23478,26 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("button", { staticClass: "btn btn-success", staticStyle: {} }, [
-            _vm._v("保存する")
-          ]),
+          _vm._m(0),
           _vm._v(" "),
           _c("br"),
+          _vm._v(" "),
           _c("br"),
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
           _c("br"),
+          _vm._v(" "),
           _c("br"),
+          _vm._v(" "),
           _c("br"),
           _vm._v(" "),
           _c("table", { staticClass: "table table-hover" }, [
-            _vm._m(0),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.tags, function(tag) {
+              _vm._l(_vm.tags, function(tag, index) {
                 return _c("tr", { attrs: { id: "tags-wrapper" } }, [
                   _c("td", [_vm._v(_vm._s(tag.ct_name))]),
                   _vm._v(" "),
@@ -23079,7 +23510,7 @@ var render = function() {
                         staticClass: "btn btn-danger",
                         on: {
                           click: function($event) {
-                            return _vm.userDelete(_vm.index, _vm.user.id)
+                            return _vm.skillDelete(tag.id)
                           }
                         }
                       },
@@ -23089,6 +23520,179 @@ var render = function() {
                 ])
               }),
               0
+            )
+          ]),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "vue-simple-suggest-wrapper" },
+            [
+              _c(
+                "vue-simple-suggest",
+                {
+                  staticClass: "vue-simple-suggest-form",
+                  attrs: {
+                    "min-length": 2,
+                    list: _vm.simpleSuggestionList,
+                    "filter-by-query": true,
+                    "aria-autocomplete": "off"
+                  },
+                  on: { "suggestion-click": _vm.creatSearchTag },
+                  model: {
+                    value: _vm.selected,
+                    callback: function($$v) {
+                      _vm.selected = $$v
+                    },
+                    expression: "selected"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "input-group mb-3" }, [
+                    _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
+                      _c("input", {
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          placeholder: "Search",
+                          "aria-label": "Recipient's username",
+                          "aria-describedby": "button-addon2",
+                          id: "carrerSearchForm",
+                          autocomplete: "off"
+                        }
+                      })
+                    ])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-group-append" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-outline-secondary btn-info",
+                    attrs: { type: "button", id: "button-addon2" },
+                    on: { click: _vm.addSearchTag }
+                  },
+                  [_vm._v("追加")]
+                )
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c(
+                "transition-group",
+                {
+                  staticClass: "list-item-wrapper",
+                  attrs: { name: "list", tag: "div" }
+                },
+                _vm._l(_vm.searchWordLists, function(searchWordList, index) {
+                  return _c(
+                    "span",
+                    { key: searchWordList, staticClass: "list-item" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "close",
+                          attrs: { type: "button", "aria-label": "Close" },
+                          on: {
+                            click: function($event) {
+                              return _vm.searchWordLists.splice(index, 1)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "svg",
+                            {
+                              staticClass: "bi bi-x-circle hama-close",
+                              attrs: {
+                                width: "1em",
+                                height: "1em",
+                                viewBox: "0 0 16 16",
+                                fill: "currentColor",
+                                xmlns: "http://www.w3.org/2000/svg"
+                              }
+                            },
+                            [
+                              _c("path", {
+                                attrs: {
+                                  "fill-rule": "evenodd",
+                                  d:
+                                    "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("path", {
+                                attrs: {
+                                  "fill-rule": "evenodd",
+                                  d:
+                                    "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("path", {
+                                attrs: {
+                                  "fill-rule": "evenodd",
+                                  d:
+                                    "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
+                                }
+                              })
+                            ]
+                          )
+                        ]
+                      ),
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(searchWordList) +
+                          "\n          "
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { attrs: { id: "registrate-btn-wrapper" } }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: {
+                  type: "button",
+                  id: "registrate-btn",
+                  "data-toggle": "tooltip",
+                  "data-placement": "top",
+                  title: "スキルを追加"
+                },
+                on: { click: _vm.postSkillInfos }
+              },
+              [_vm._v("スキル追加")]
             )
           ])
         ]
@@ -23101,6 +23705,21 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "submitBtnWrapper" } }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success",
+          attrs: { id: "submitBtn", type: "submit" }
+        },
+        [_vm._v("更新")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-light" }, [
       _c("tr", [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Skill")]),
@@ -23108,6 +23727,63 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("SkillLevel")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Delete")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "skillLevelWrapper" } }, [
+      _c("fieldset", { attrs: { id: "skillLevelFielfset" } }, [
+        _c("input", {
+          staticClass: "radio-inline__input btn-outline-primary",
+          attrs: {
+            id: "item-1",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-1",
+            checked: "checked"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-1" } },
+          [_vm._v("1")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input",
+          attrs: {
+            id: "item-2",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-2"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-2" } },
+          [_vm._v("2")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input",
+          attrs: {
+            id: "item-3",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-3"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-3" } },
+          [_vm._v("3")]
+        )
       ])
     ])
   }
@@ -39588,26 +40264,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  mode: 'history',
+  mode: "history",
   routes: [{
-    path: '/user',
-    name: 'user',
+    path: "/",
+    name: "search",
+    component: _components_SearchComponent_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+  }, {
+    path: "/user",
+    name: "user",
     component: _components_UserComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   }, {
-    path: '/user/create',
-    name: 'user_create',
+    path: "/user/create",
+    name: "user_create",
     component: _components_UserCreateComponent_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
   }, {
-    path: '/user/:id',
-    name: 'user_detail',
+    path: "/user/:id",
+    name: "user_detail",
     component: _components_UserDetailComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   }, {
-    path: '/user/:id/edit',
-    name: 'user_edit',
+    path: "/user/:id/edit",
+    name: "user_edit",
     component: _components_UserEditComponent_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   }, {
-    path: '/search',
-    name: 'search',
+    path: "/search",
+    name: "search",
     component: _components_SearchComponent_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   }]
 }));
