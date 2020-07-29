@@ -1,7 +1,6 @@
 <template>
   <div>
     <div>
-      <!-- <form @submit.prevent="createUser"> -->
       <form>
         <div class="form-row">
           <div class="user-form-left">
@@ -16,15 +15,46 @@
               <div class="form-group col-md-4" id="se-career-form">
                 <label for="se_career">エンジニア歴</label>
                 <select v-model="user.se_career" class="form-control" style="width:128%;">
-                  <!-- TODO エンジニア歴はどれくらいの区切りを設けるか？ -->
-                  <option selected>Choose...</option>
+                  <!-- TODO 40個用意したいが、直書きを避けたい -->
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
                   <option value="4">4</option>
                   <option value="5">5</option>
-                  <option value="6">6~10</option>
-                  <option value="7">10~</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="24">24</option>
+                  <option value="25">25</option>
+                  <option value="26">26</option>
+                  <option value="28">28</option>
+                  <option value="29">29</option>
+                  <option value="30">30</option>
+                  <option value="31">31</option>
+                  <option value="32">32</option>
+                  <option value="33">33</option>
+                  <option value="34">34</option>
+                  <option value="35">35</option>
+                  <option value="36">36</option>
+                  <option value="37">37</option>
+                  <option value="38">38</option>
+                  <option value="39">39</option>
+                  <option value="40">40</option>
                 </select>
               </div>
             </div>
@@ -46,7 +76,6 @@
             <img :src="'/image/face2.jpg'" alt id="user-image" />
 
             <div id="upload-image-btn-wrapper">
-              <!-- TODO アップロードボタンの表示と、アップロード機能の導入 -->
               <div class="content">
                 <p>
                   <input type="file" v-on:change="imageSelect" />
@@ -68,7 +97,6 @@
             :list="simpleSuggestionList"
             :filter-by-query="true"
             aria-autocomplete="off"
-            v-on:suggestion-click="creatSearchTag"
             class="vue-simple-suggest-form"
           >
             <div class="input-group mb-3">
@@ -85,11 +113,70 @@
               </div>
             </div>
           </vue-simple-suggest>
+
+          <!-- スキル一覧をポップアップするための"i"アイコンを表示 -->
+          <svg
+            width="1em"
+            height="1em"
+            viewBox="0 0 16 16"
+            class="bi bi-info-square btn"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            data-toggle="modal"
+            data-target="#exampleModalLong"
+            id="btn-primary-skill-list"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+            />
+            <path
+              d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"
+            />
+            <circle cx="8" cy="4.5" r="1" />
+          </svg>
+
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="exampleModalLong"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLongTitle"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">スキル一覧</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p
+                    v-for="skillName in simpleSuggestionList"
+                    v-bind:key="skillName.id"
+                    id="introductionText"
+                  >{{ skillName}}</p>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                    id="hama-modal-close-btn"
+                  >閉じる</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div id="skillLevelWrapper">
             <fieldset id="skillLevelFielfset">
               <input
                 id="item-1"
-                class="radio-inline__input btn-outline-primary"
+                class="radio-inline__input btn-outline-primary input_level_1"
                 type="radio"
                 name="accessible-radio"
                 value="item-1"
@@ -98,7 +185,7 @@
               <label class="radio-inline__label" for="item-1">1</label>
               <input
                 id="item-2"
-                class="radio-inline__input"
+                class="radio-inline__input input_level_2"
                 type="radio"
                 name="accessible-radio"
                 value="item-2"
@@ -106,7 +193,7 @@
               <label class="radio-inline__label" for="item-2">2</label>
               <input
                 id="item-3"
-                class="radio-inline__input"
+                class="radio-inline__input input_level_3"
                 type="radio"
                 name="accessible-radio"
                 value="item-3"
@@ -125,11 +212,9 @@
           </div>
         </div>
 
-        <!--TODO とりあえずHTMLで幅表生  -->
         <br />
         <br />
         <br />
-        <!-- 追加するスキルを表示 -->
 
         <div>
           <transition-group name="list" tag="div" class="list-item-wrapper">
@@ -138,13 +223,15 @@
                                 index) in searchWordLists"
               v-bind:key="searchWordList"
               class="list-item"
+              :id="wordColorChange(index)"
             >
               <button
                 type="button"
                 class="close"
                 aria-label="Close"
                 v-on:click="
-                                        searchWordLists.splice(index, 1)
+                                        searchWordLists.splice(index, 1);
+                                        adjustpostSkillData(index);
                                     "
               >
                 <svg
@@ -208,8 +295,6 @@
 
 #se-career-form {
   display: inline-block;
-  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */
-  /* width: 50%; */
 }
 
 #introduction-form {
@@ -239,7 +324,6 @@
   margin: 0 auto;
 }
 
-/* flexboxを使ってみる */
 .vue-simple-suggest-wrapper {
   display: flex;
   justify-content: center;
@@ -249,39 +333,6 @@
 .vue-simple-suggest-form {
   display: inline-block;
   width: 40%;
-}
-
-#result-list-wrapper {
-  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */
-}
-
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.5);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-.selected-tag-with-anime-wrapper {
-  width: 100%;
-}
-.selected-tag-with-anime {
-  display: inline-block;
-  width: 600px;
-  padding: 20px;
-  font-size: 160%;
-  background-color: red;
-  border-radius: 15px;
 }
 
 .list-item {
@@ -295,11 +346,6 @@
   margin-top: 10px;
   border-radius: 10px;
 }
-.list-item-wrapper {
-}
-.list-item :hover {
-  background-color: aqua;
-}
 .close {
   position: absolute;
   right: -12px;
@@ -311,7 +357,6 @@
   font-size: 100%;
 }
 
-/* 追加するスキルを検索するフォーム */
 .mb-3 {
   width: 100%;
 }
@@ -336,13 +381,13 @@
 }
 
 .list-enter-active {
-  /* transition: all 1s; */
   animation: bounce-in 0.5s;
 }
 .list-leave-active {
   animation: bounce-in 0.5s reverse;
 }
-.list-enter, .list-leave-to /* .list-leave-active for below version 2.1.8 */ {
+.list-enter,
+.list-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
@@ -359,8 +404,6 @@
 }
 
 /* レベル選択のラジオボタンの装飾 */
-/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */
-
 #skillLevelWrapper {
   display: inline-block;
   margin: 0 2%;
@@ -387,15 +430,25 @@ fieldset {
   background-color: lightgrey;
 }
 
-.radio-inline__input:checked + .radio-inline__label {
-  background: #ff8856;
+.input_level_1:checked + .radio-inline__label {
   color: #fff;
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+  background: #00cc99;
+}
+.input_level_2:checked + .radio-inline__label {
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+  background: lightcoral;
+}
+.input_level_3:checked + .radio-inline__label {
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+  background: #cc9933;
 }
 
 .radio-inline__input:focus + .radio-inline__label {
-  outline-color: #4d90fe;
-  outline-offset: -2px;
+  outline-color: #cccccc;
+  outline-offset: 0px;
   outline-style: auto;
   outline-width: 5px;
 }
@@ -408,6 +461,29 @@ fieldset {
   display: inline-block;
   width: 20%;
   font-size: 130%;
+}
+#skill-level-1 {
+  background-color: #00cc99;
+}
+#skill-level-2 {
+  background-color: lightcoral;
+}
+#skill-level-3 {
+  background-color: #cc9933;
+}
+#btn-primary-skill-list {
+  position: relative;
+  right: 2.3rem;
+  padding: 6px;
+  font-size: 230%;
+}
+.modal-content {
+  text-align: center;
+}
+#exampleModalLongTitle,
+#hama-modal-close-btn {
+  display: block;
+  margin: 0 auto;
 }
 </style>
 
@@ -453,8 +529,6 @@ export default {
       formData.append("name", this.user.name);
       formData.append("se_career", this.user.se_career);
       formData.append("introduction", this.user.introduction);
-      formData.append("email", this.user.email);
-      formData.append("password", this.user.password);
 
       //登録ボタン押下時に、Controller側でDB参照時に使用するユーザー名を、スキル情報を格納するpostSkillDataに格納する
       this.postSkillData[0].name = this.user.name;
@@ -462,14 +536,13 @@ export default {
       axios
         .post("/api/user", formData)
         .then((response) => {
-          alert("ユーザー登録しました");
           //別のメソッドを呼び、axiosの実行順番を制御（ユーザー登録の処理が完了した後に、スキル情報登録の処理を実行したい）
-          this.postSkillInfos();
+          this.postSkillInfos(response.data.userId);
         })
         .catch((error) => console.log(error));
     },
-    //スキル登録
-    postSkillInfos() {
+    //スキルのレベルと順番を調節する
+    postSkillInfos(userId) {
       axios
         .get("/api/skillInfos/", {
           params: this.postSkillData,
@@ -482,8 +555,11 @@ export default {
           this.email = "";
           this.password = "";
 
-          alert("スキル登録が完了しました。");
-          // location.href = "http://localhost:10080/user";
+          alert("登録ありがとうございました。");
+          this.$router.push({
+            name: "user_detail",
+            params: { id: userId },
+          });
         })
         .catch((error) => console.log(error));
     },
@@ -493,6 +569,9 @@ export default {
     addSearchTag: function () {
       // タグ検索フォームを空にする
       $("#carrerSearchForm").val("");
+
+      //ユーザーが指定したスキルを可視化できるように格納
+      this.searchWordLists.push(this.selected);
 
       //スキルレベルのラジオボタンの値を取得
       var elements = document.getElementsByName("accessible-radio");
@@ -506,7 +585,7 @@ export default {
       } else if (elements[2].checked == true) {
         selectSkillLevel = 3;
       } else {
-        alert("レベルを正しく選択してください。");
+        alert("[エラー]ページを再読み込みしてください。");
       }
 
       //ユーザーが選択したスキル情報を、オブジェクトを内包する配列に格納→Controllerで取り扱いやすくするため
@@ -515,12 +594,23 @@ export default {
         skillName: this.selected,
         skillLevel: selectSkillLevel,
       });
-
-      //ユーザーが指定したスキルを可視化できるように格納
-      this.searchWordLists.push(this.selected);
     },
-    creatSearchTag: function () {
-      //
+    adjustpostSkillData: function (index) {
+      this.postSkillData.splice(index + 1, 1);
+    },
+    //選択したスキルに応じて、そのスキルの背景色を変化
+    wordColorChange: function (index) {
+      //postSkillData[0]にはコントローラー側に渡すユーザーの氏名情報が格納させているだけなので、index+1にする必要がある。
+      if (this.postSkillData[index + 1]["skillLevel"] == 1) {
+        return "skill-level-1";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 2) {
+        return "skill-level-2";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 3) {
+        return "skill-level-3";
+      } else {
+        alert("[エラー]ページを再読み込みしてください。");
+        return;
+      }
     },
     getSuggestionListTags: function () {
       axios.get("/api/getSuggestionListTags").then((res) => {

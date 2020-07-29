@@ -33,11 +33,12 @@ Route::delete('/user/{user}', 'UserController@userDelete');
 
 // 検索機能用
 Route::get('/show-all-user', 'UserController@showAllUsers');
-// Route::get('/search_carrer', 'UserController@searchSkills');
-Route::post('/search_carrer', 'UserController@searchSkills');
+Route::get('/search_carrer', 'UserController@searchSkills');
+// Route::post('/search_carrer', 'UserController@searchSkills');
 
 //編集画面
-Route::patch('/user/{user}', 'UserController@userEdit');
+// Route::patch('/user/{user}', 'UserController@userEdit');
+Route::post('/user/update', 'UserController@userEdit');
 Route::get('/skillDelete/', 'UserController@skillDelete');
 
 //詳細画面

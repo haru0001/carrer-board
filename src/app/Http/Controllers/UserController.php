@@ -11,7 +11,6 @@ use phpDocumentor\Reflection\DocBlock\Tag as DocBlockTag;
 
 class UserController extends Controller
 {
-
     public function userList(Request $request)
     {
         $users = User::all();
@@ -21,6 +20,7 @@ class UserController extends Controller
 
     public function userCreate(Request $request)
     {
+
 
         if (request()->img_path) {
             $file_name = time() . '.' . request()->img_path->getClientOriginalName();
@@ -45,7 +45,12 @@ class UserController extends Controller
             $user->save();
         }
 
-        return ['success' => '登録しました!'];
+        $userIdRecord = User::select('id')->where('name', $request->name)->get();
+        $userId = $userIdRecord[0]['id'];
+        info("taka-si");
+        info($userId);
+
+        return response()->json(['userId' => $userId]);
     }
 
     //ユーザーのスキル情報を中間テーブル(tag_maps)に登録する
@@ -92,10 +97,34 @@ class UserController extends Controller
     }
 
 
-
-    public function userEdit(User $user, Request $request)
+    //編集画面での画像再登録機能では、バック側で画像保存のパスを設定しないといけないため、シンプルなこれらのコードを解体し、新しいロジックを導入する必要がある。そのためにコメントアウトする。
+    // public function userEdit(User $user, Request $request)
+    // {
+    //     $user->update($request->user);
+    //     return response()->json(['user' => $user]);
+    // }
+    public function userEdit(Request $request)
     {
-        $user->update($request->user);
+        if (request()->img_path) {
+            //TODO 古い画像もストレージに溜まっていく一方。削除する処理が必要か？
+            $file_name = time() . '.' . request()->img_path->getClientOriginalName();
+            request()->img_path->storeAs('public/image', $file_name);
+
+            $img_path =
+                'image/' . $file_name;
+        } else {
+            $img_path = null;
+        }
+
+        $update_column = [
+            'name' => $request->name,
+            'se_career' => $request->se_career,
+            'introduction' => $request->introduction,
+            'img_path' => $img_path
+        ];
+
+        $user = User::select('id', 'name', 'se_career', 'introduction', 'img_path')->where('id', $request->id)->update($update_column);
+
         return response()->json(['user' => $user]);
     }
 
@@ -111,10 +140,6 @@ class UserController extends Controller
         return ['success' => 'スキル削除完了'];
     }
 
-
-
-
-
     public function userDelete(User $user)
     {
         $user->delete();
@@ -124,7 +149,6 @@ class UserController extends Controller
     //検索画面を訪れた際は全てのユーザーを表示する
     public function showAllUsers()
     {
-
         return User::select('id', 'name', 'se_career', 'introduction', 'img_path')->get();
     }
 
@@ -150,16 +174,26 @@ class UserController extends Controller
         return response()->json(['skillTags' => $skillTags]);
     }
 
-    //新規登録や編集画面でのスキル検索
+    //検索画面
     public function searchSkills(Request $request)
     {
-        $searchWord = $request->searchWord;
+
+        $skillInfos = $request->all();
+        $searchRecord = [];
 
         //ユーザーが検索したいワードがあるTagテーブルの中のレコードを取得
-        $resultSkillsId = Tag::select('id')->whereIn('ct_name', $searchWord)->get();
+        foreach ($skillInfos as $key => $valueAsJson) {
+            if ($key == 0) {
+                continue; //skillInfos[0]はスキル情報を持たないため Vue側でユーザーが検索スキルを消す動作を実現するために必要
+            } else {
+                $value = json_decode($valueAsJson, true);
+                $userSkill = Tag::select('id')->where('ct_name', $value['skillName'])->where('ct_level', $value['skillLevel'])->get();
+                $searchRecord[] = $userSkill[0]['id'];
+            }
+        }
 
         //上記で取得したスキルのidを使用して中間テーブルでそれに対応するユーザーIDを取得
-        $resultUserId = TagMap::select('user_id')->whereIn('tag_id', $resultSkillsId)->get();
+        $resultUserId = TagMap::select('user_id')->whereIn('tag_id', $searchRecord)->get();
 
         //上記で取得したユーザーIDに対応するユーザー情報をUserテーブルから取得
         $result = User::select('id', 'name', 'se_career', 'introduction', 'img_path')->whereIn('id', $resultUserId)->get();

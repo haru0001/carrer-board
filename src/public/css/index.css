@@ -1,15 +1,9 @@
-
-*{
+* {
     box-sizing: border-box;
 }
 
-
-#contents-wrapper{
-    width: 60%;
+#contents-wrapper {
+    width: 65%;
     display: inline-block;
-    margin: 5% 20%;
-    /* background-color: lightcyan; */
-
+    margin: 10% 20%;
 }
-
-

@@ -1930,6 +1930,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -2191,6 +2196,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2203,55 +2244,72 @@ __webpack_require__.r(__webpack_exports__);
       simpleSuggestionList: [],
       toggle: false,
       searchWordLists: [],
-      resultLists: [] //APIから挿入
-
+      resultLists: [],
+      postSkillData: [{
+        skillName: "",
+        skillLevel: ""
+      }]
     };
   },
   methods: {
-    creatSearchTag: function creatSearchTag() {//
-    },
-    clickSearchBtn: function clickSearchBtn(index) {
+    adjustpostSkillData: function adjustpostSkillData(index) {
       var _this = this;
 
-      this.searchWordLists.splice(index, 1); //検索スキルを削除したあと、配列が空なら全てのユーザーを表示させる。
+      this.postSkillData.splice(index + 1, 1); //検索スキルを削除したあと、配列が空なら全てのユーザーを表示させる。
 
       if (this.searchWordLists.length == 0) {
         this.getResult();
         return;
       }
 
-      var data = {
-        searchWord: this.searchWordLists
-      };
-      axios.post("/api/search_carrer/", data).then(function (res) {
+      axios.get("/api/search_carrer/", {
+        params: this.postSkillData
+      }).then(function (res) {
         _this.resultLists = res.data;
+      })["catch"](function (error) {
+        return console.log(error);
       });
     },
-    // 押下した時にサーチして、getResult()を実行する。
+    //押下した時に検索を実行する
     addSearchTag: function addSearchTag() {
       var _this2 = this;
 
       // タグ検索フォームを空にする
-      $("#carrerSearchForm").val(""); //ユーザーが指定したタグを、タグ管理リスト(searchWordLists)に追加
-      //画面に選択したスキルTagを表示させるために、配列に格納する
+      $("#carrerSearchForm").val(""); //スキルレベルのラジオボタンの値を取得
 
-      this.searchWordLists.push(this.selected); //JSONでデータのやり取りを行うためにJSON形式にする
-      //TODO 本当にこれはJSONか？
+      var elements = document.getElementsByName("accessible-radio"); //選択されたレベルをチェック
 
-      var data = {
-        searchWord: this.searchWordLists
-      };
-      axios.post("/api/search_carrer/", data).then(function (res) {
-        // テストのため返り値をコンソールに表示
-        _this2.resultLists = res.data; // alert(res.data.success);
-        // alert("検索完了");
+      var selectSkillLevel = 0;
+
+      if (elements[0].checked == true) {
+        selectSkillLevel = 1;
+      } else if (elements[1].checked == true) {
+        selectSkillLevel = 2;
+      } else if (elements[2].checked == true) {
+        selectSkillLevel = 3;
+      } else {
+        alert("レベルを正しく選択してください。");
+      }
+
+      this.postSkillData.push({
+        skillName: this.selected,
+        skillLevel: selectSkillLevel
+      }); //画面に選択したスキルTagを表示させるために、配列に格納する
+
+      this.searchWordLists.push(this.selected);
+      axios.get("/api/search_carrer/", {
+        params: this.postSkillData
+      }).then(function (res) {
+        _this2.resultLists = res.data;
+      })["catch"](function (error) {
+        return console.log(error);
       });
     },
     getResult: function getResult() {
       var _this3 = this;
 
       axios.get("/api/show-all-user").then(function (res) {
-        _this3.resultLists = res.data; //res.dataで取得。引数に合わせてOK
+        _this3.resultLists = res.data;
       });
     },
     getSuggestionListTags: function getSuggestionListTags() {
@@ -2266,9 +2324,26 @@ __webpack_require__.r(__webpack_exports__);
           _this4.simpleSuggestionList.push(ct_name);
         }
       });
+    },
+    //選択したスキルに応じて、そのスキルの背景色を変化
+    wordColorChange: function wordColorChange(index) {
+      if (this.postSkillData.length == 0) {
+        return;
+      } //this.postSkillData[0]には何も格納されていない→コントローラー側の都合のため
+
+
+      if (this.postSkillData[index + 1]["skillLevel"] == 1) {
+        return "skill-level-1";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 2) {
+        return "skill-level-2";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 3) {
+        return "skill-level-3";
+      } else {
+        alert("[エラー]ページを再読み込みしてください。");
+        return;
+      }
     }
   },
-  //mounted()がページを読み込んだ時に行う処理 ※マウントとは、既存のDOM要素をVue.jsが生成するDOM要素で置き換えること。
   mounted: function mounted() {
     this.getResult();
     this.getSuggestionListTags();
@@ -2355,35 +2430,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      users: []
+      users: [],
+      deleteTargetUser: ""
     };
   },
   methods: {
-    userDelete: function userDelete(index, id) {
+    userDelete: function userDelete() {
       var _this = this;
 
-      axios["delete"]("/api/user/" + id).then(function (response) {
-        _this.users.slice(id, 1); // console.log(index + ":" + id);
+      document.getElementById("model-close-btn").click();
+      axios["delete"]("/api/user/" + this.deleteTargetUser).then(function (response) {
+        _this.users.slice(_this.deleteTargetUser, 1);
 
+        _this.getUserInfo();
 
         alert("削除しました");
-        location.href = "http://localhost:10080/user";
       })["catch"](function (error) {
         return console.log(error);
+      });
+    },
+    insertDeleteTarget: function insertDeleteTarget(id) {
+      this.deleteTargetUser = id;
+    },
+    getUserInfo: function getUserInfo() {
+      var _this2 = this;
+
+      axios.get("/api/user").then(function (response) {
+        _this2.users = response.data.users;
+      })["catch"](function (error) {
+        console.log(error);
       });
     }
   },
   created: function created() {
-    var _this2 = this;
-
-    axios.get("/api/user").then(function (response) {
-      _this2.users = response.data.users;
-    })["catch"](function (error) {
-      console.log(error);
-    });
+    this.getUserInfo();
   }
 });
 
@@ -2401,6 +2492,82 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_simple_suggest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-simple-suggest */ "./node_modules/vue-simple-suggest/dist/es6.js");
 /* harmony import */ var vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-simple-suggest/dist/styles.css */ "./node_modules/vue-simple-suggest/dist/styles.css");
 /* harmony import */ var vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_simple_suggest_dist_styles_css__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2853,21 +3020,18 @@ __webpack_require__.r(__webpack_exports__);
       formData.append("img_path", this.user.img_path);
       formData.append("name", this.user.name);
       formData.append("se_career", this.user.se_career);
-      formData.append("introduction", this.user.introduction);
-      formData.append("email", this.user.email);
-      formData.append("password", this.user.password); //登録ボタン押下時に、Controller側でDB参照時に使用するユーザー名を、スキル情報を格納するpostSkillDataに格納する
+      formData.append("introduction", this.user.introduction); //登録ボタン押下時に、Controller側でDB参照時に使用するユーザー名を、スキル情報を格納するpostSkillDataに格納する
 
       this.postSkillData[0].name = this.user.name;
       axios.post("/api/user", formData).then(function (response) {
-        alert("ユーザー登録しました"); //別のメソッドを呼び、axiosの実行順番を制御（ユーザー登録の処理が完了した後に、スキル情報登録の処理を実行したい）
-
-        _this.postSkillInfos();
+        //別のメソッドを呼び、axiosの実行順番を制御（ユーザー登録の処理が完了した後に、スキル情報登録の処理を実行したい）
+        _this.postSkillInfos(response.data.userId);
       })["catch"](function (error) {
         return console.log(error);
       });
     },
-    //スキル登録
-    postSkillInfos: function postSkillInfos() {
+    //スキルのレベルと順番を調節する
+    postSkillInfos: function postSkillInfos(userId) {
       var _this2 = this;
 
       axios.get("/api/skillInfos/", {
@@ -2879,7 +3043,14 @@ __webpack_require__.r(__webpack_exports__);
         _this2.introduction = "";
         _this2.email = "";
         _this2.password = "";
-        alert("スキル登録が完了しました。"); // location.href = "http://localhost:10080/user";
+        alert("登録ありがとうございました。");
+
+        _this2.$router.push({
+          name: "user_detail",
+          params: {
+            id: userId
+          }
+        });
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -2889,7 +3060,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     addSearchTag: function addSearchTag() {
       // タグ検索フォームを空にする
-      $("#carrerSearchForm").val(""); //スキルレベルのラジオボタンの値を取得
+      $("#carrerSearchForm").val(""); //ユーザーが指定したスキルを可視化できるように格納
+
+      this.searchWordLists.push(this.selected); //スキルレベルのラジオボタンの値を取得
 
       var elements = document.getElementsByName("accessible-radio"); //選択されたレベルをチェック
 
@@ -2902,7 +3075,7 @@ __webpack_require__.r(__webpack_exports__);
       } else if (elements[2].checked == true) {
         selectSkillLevel = 3;
       } else {
-        alert("レベルを正しく選択してください。");
+        alert("[エラー]ページを再読み込みしてください。");
       } //ユーザーが選択したスキル情報を、オブジェクトを内包する配列に格納→Controllerで取り扱いやすくするため
 
 
@@ -2910,11 +3083,24 @@ __webpack_require__.r(__webpack_exports__);
         name: "",
         skillName: this.selected,
         skillLevel: selectSkillLevel
-      }); //ユーザーが指定したスキルを可視化できるように格納
-
-      this.searchWordLists.push(this.selected);
+      });
     },
-    creatSearchTag: function creatSearchTag() {//
+    adjustpostSkillData: function adjustpostSkillData(index) {
+      this.postSkillData.splice(index + 1, 1);
+    },
+    //選択したスキルに応じて、そのスキルの背景色を変化
+    wordColorChange: function wordColorChange(index) {
+      //postSkillData[0]にはコントローラー側に渡すユーザーの氏名情報が格納させているだけなので、index+1にする必要がある。
+      if (this.postSkillData[index + 1]["skillLevel"] == 1) {
+        return "skill-level-1";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 2) {
+        return "skill-level-2";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 3) {
+        return "skill-level-3";
+      } else {
+        alert("[エラー]ページを再読み込みしてください。");
+        return;
+      }
     },
     getSuggestionListTags: function getSuggestionListTags() {
       var _this3 = this;
@@ -2946,6 +3132,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -3266,6 +3455,15 @@ __webpack_require__.r(__webpack_exports__);
         _this2.tags = response.data; // alert("スキルを読み込んだ");
       })["catch"](function (erorr) {
         return console.log(error);
+      });
+    },
+    toEditPage: function toEditPage() {
+      this.$router.push({
+        name: "user_edit",
+        // params: { id: this.$route.params.id },
+        params: {
+          id: this.$route.params.id
+        }
       });
     }
   },
@@ -3753,6 +3951,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3777,7 +3993,6 @@ __webpack_require__.r(__webpack_exports__);
       searchWordLists: [],
       //実行順番を制御しないといけないためにユーザー情報とスキル情報は別に管理する必要があった。そのためにスキル情報を管理する配列を宣言する。
       postSkillData: [{
-        name: "",
         skillName: "",
         skillLevel: ""
       }]
@@ -3787,10 +4002,19 @@ __webpack_require__.r(__webpack_exports__);
     updateUser: function updateUser() {
       var _this = this;
 
-      axios.patch("/api/user/" + this.user.id, {
-        user: this.user
-      }).then(function (response) {
-        _this.user = response.data.user; //this.$router.pushで画面遷移　同時にparamsも持たせることができる。(便利！)
+      // 画像ファイルは一度ストレージに保存され、そのパスをDBにて管理する。そのために従来のユーザー情報更新の方法だとうまくいかない。無理やり感はあるが、ユーザー登録と同じロジックで、更新機能を実現する
+      // axios;
+      // .patch("/api/user/" + this.user.id, {
+      //   user: this.user,
+      // })
+      var formData = new FormData();
+      formData.append("id", this.user.id);
+      formData.append("img_path", this.user.img_path);
+      formData.append("name", this.user.name);
+      formData.append("se_career", this.user.se_career);
+      formData.append("introduction", this.user.introduction);
+      axios.post("/api/user/update", formData).then(function (response) {
+        _this.user = response.data.user;
 
         _this.$router.push({
           name: "user_detail",
@@ -3812,14 +4036,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/api/skillDelete/", {
         params: this.postSkillDeleteData
       }).then(function (response) {
-        _this2.tags.slice(id, 1); //TODO 画面遷移先を編集画面のままにする。
-        //画面が詳細画面に遷移してしまうのは、<form @submit.prevent="updateUser">で、
-        //           this.$router.push({
-        //   name: "user_detail",
-        //   params: { id: this.$route.params.id },
-        // });
-        //してしまっているから。これを変更すると、ユーザー情報を更新したあとも、この画面に留まってしまうことになるので、要相談。
+        _this2.tags.slice(id, 1);
 
+        _this2.getUserSkills();
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -3834,7 +4053,8 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(error);
       });
     },
-    creatSearchTag: function creatSearchTag() {//
+    imageSelect: function imageSelect(event) {
+      this.user.img_path = event.target.files[0];
     },
     addSearchTag: function addSearchTag() {
       // タグ検索フォームを空にする
@@ -3872,8 +4092,12 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/api/skillInfos/", {
         params: this.postSkillData
       }).then(function (response) {
-        alert("スキル登録が完了しました。");
-        location.href = "http://localhost:10080/user/" + _this4.user.id;
+        alert("スキル登録が完了しました。"); //画面を適切にする(スキルの更新,追加スキルの削除)
+
+        _this4.getUserSkills();
+
+        _this4.searchWordLists = "";
+        _this4.postSkillData = "";
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -3890,6 +4114,23 @@ __webpack_require__.r(__webpack_exports__);
           _this5.simpleSuggestionList.push(ct_name);
         }
       });
+    },
+    adjustpostSkillData: function adjustpostSkillData(index) {
+      this.postSkillData.splice(index + 1, 1);
+    },
+    //選択したスキルに応じて、そのスキルの背景色を変化
+    wordColorChange: function wordColorChange(index) {
+      //postSkillData[0]にはコントローラー側に渡すユーザーの氏名情報が格納させているだけなので、index+1にする必要がある。
+      if (this.postSkillData[index + 1]["skillLevel"] == 1) {
+        return "skill-level-1";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 2) {
+        return "skill-level-2";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 3) {
+        return "skill-level-3";
+      } else {
+        alert("[エラー]ページを再読み込みしてください。");
+        return;
+      }
     }
   },
   created: function created() {
@@ -3927,6 +4168,25 @@ exports.push([module.i, "\r\n\r\n.vue-simple-suggest > ul {\r\n  list-style: non
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.container-fluid[data-v-153bfd55] {\n  position: fixed;\n  z-index: 10;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SearchComponent.vue?vue&type=style&index=0&id=89b0c3cc&scoped=true&lang=css&":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SearchComponent.vue?vue&type=style&index=0&id=89b0c3cc&scoped=true&lang=css& ***!
@@ -3939,7 +4199,26 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.container[data-v-89b0c3cc] {\n  width: 100%;\n  text-align: center;\n}\n.card[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 25%;\n  margin: 20px;\n  background-color: cornflowerblue;\n\n  /*todo　背景色の変化でレベル分けを表現するのが簡単だった。*/\n}\n.vue-simple-suggest-wrapper[data-v-89b0c3cc] {\n  display: flex;\n  justify-content: center;\n}\n.vue-simple-suggest-form[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 35%;\n}\n#button-addon2[data-v-89b0c3cc] {\n  color: aliceblue;\n  font: bolder;\n}\n#result-list-wrapper[data-v-89b0c3cc] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n\n/* hamada　アニメーション実験*/\n.bounce-enter-active[data-v-89b0c3cc] {\n  -webkit-animation: bounce-in-data-v-89b0c3cc 0.5s;\n          animation: bounce-in-data-v-89b0c3cc 0.5s;\n}\n.bounce-leave-active[data-v-89b0c3cc] {\n  animation: bounce-in-data-v-89b0c3cc 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-89b0c3cc] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-89b0c3cc] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.list-item[data-v-89b0c3cc] :hover {\n  background-color: aqua;\n}\n.close[data-v-89b0c3cc] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-89b0c3cc] {\n  font-size: 120%;\n}\n.list-enter-active[data-v-89b0c3cc] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-89b0c3cc 0.5s;\n          animation: bounce-in-data-v-89b0c3cc 0.5s;\n}\n.list-leave-active[data-v-89b0c3cc] {\n  animation: bounce-in-data-v-89b0c3cc 0.5s reverse;\n}\n.list-enter[data-v-89b0c3cc], .list-leave-to[data-v-89b0c3cc] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-89b0c3cc] {\n  display: inline-block;\n  margin: 0 3%;\n}\n", ""]);
+exports.push([module.i, "\n.container[data-v-89b0c3cc] {\n  width: 100%;\n  text-align: center;\n}\n.card[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 25%;\n  margin: 20px;\n  background-color: cornflowerblue;\n}\n.vue-simple-suggest-wrapper[data-v-89b0c3cc] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n.vue-simple-suggest-form[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-89b0c3cc] {\n  color: aliceblue;\n  font: bolder;\n}\n#result-list-wrapper[data-v-89b0c3cc] {\n  display: inline-block;\n}\n\n/* アニメーション*/\n.list-item[data-v-89b0c3cc] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.close[data-v-89b0c3cc] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-89b0c3cc] {\n  font-size: 120%;\n}\n\n/* サーチ単語のアニメーション */\n.list-enter-active[data-v-89b0c3cc] {\n  -webkit-animation: bounce-in-data-v-89b0c3cc 0.5s;\n          animation: bounce-in-data-v-89b0c3cc 0.5s;\n}\n.list-leave-active[data-v-89b0c3cc] {\n  animation: bounce-in-data-v-89b0c3cc 0.5s reverse;\n}\n.list-enter[data-v-89b0c3cc],\n.list-leave-to[data-v-89b0c3cc] {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@-webkit-keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-89b0c3cc {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\nfieldset[data-v-89b0c3cc] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-89b0c3cc] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-89b0c3cc] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-89b0c3cc] {\n  display: inline-block;\n  margin: 0 2%;\n  width: 10%;\n}\n.input_level_1:checked + .radio-inline__label[data-v-89b0c3cc] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: #00cc99;\n}\n.input_level_2:checked + .radio-inline__label[data-v-89b0c3cc] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: lightcoral;\n}\n.input_level_3:checked + .radio-inline__label[data-v-89b0c3cc] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: #cc9933;\n}\n#skill-level-1[data-v-89b0c3cc] {\n  background-color: #00cc99;\n}\n#skill-level-2[data-v-89b0c3cc] {\n  background-color: lightcoral;\n}\n#skill-level-3[data-v-89b0c3cc] {\n  background-color: #cc9933;\n}\n.radio-inline__input[data-v-89b0c3cc] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n#skillLevelWrapper[data-v-89b0c3cc] {\n  display: inline-block;\n  margin: 0 2%;\n}\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-89b0c3cc] {\n  width: 100%;\n}\n#carrerSearchFormWrapper[data-v-89b0c3cc] {\n  display: inline-block;\n  width: 100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n#introductionText[data-v-7f050fd2] {\n  text-overflow: ellipsis;\n}\n", ""]);
 
 // exports
 
@@ -3958,7 +4237,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-46aa920a] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-46aa920a] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-46aa920a] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-46aa920a] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-46aa920a] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n}\n#upload-image-btn[data-v-46aa920a] {\n  width: 70%;\n  margin: 0 auto;\n}\n\n/* flexboxを使ってみる */\n.vue-simple-suggest-wrapper[data-v-46aa920a] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n.vue-simple-suggest-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 40%;\n}\n#result-list-wrapper[data-v-46aa920a] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-46aa920a] {\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.bounce-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-46aa920a] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-46aa920a] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-46aa920a] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.list-item-wrapper[data-v-46aa920a] {\n}\n.list-item[data-v-46aa920a] :hover {\n  background-color: aqua;\n}\n.close[data-v-46aa920a] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-46aa920a] {\n  font-size: 100%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-46aa920a] {\n  width: 100%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 20%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#button-addon2[data-v-46aa920a] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-46aa920a] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.list-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n.list-enter[data-v-46aa920a], .list-leave-to[data-v-46aa920a] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 2%;\n}\nfieldset[data-v-46aa920a] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-46aa920a] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-46aa920a] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-46aa920a] {\n  display: inline-block;\n}\n#introduction-form[data-v-46aa920a] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-46aa920a] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-46aa920a] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n}\n#upload-image-btn[data-v-46aa920a] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-46aa920a] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n.vue-simple-suggest-form[data-v-46aa920a] {\n  display: inline-block;\n  width: 40%;\n}\n.list-item[data-v-46aa920a] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.close[data-v-46aa920a] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-46aa920a] {\n  font-size: 100%;\n}\n.mb-3[data-v-46aa920a] {\n  width: 100%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 20%;\n}\n#carrerSearchFormWrapper[data-v-46aa920a] {\n  display: inline-block;\n  width: 100%;\n}\n#button-addon2[data-v-46aa920a] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-46aa920a] {\n  -webkit-animation: bounce-in-data-v-46aa920a 0.5s;\n          animation: bounce-in-data-v-46aa920a 0.5s;\n}\n.list-leave-active[data-v-46aa920a] {\n  animation: bounce-in-data-v-46aa920a 0.5s reverse;\n}\n.list-enter[data-v-46aa920a],\n.list-leave-to[data-v-46aa920a] {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@-webkit-keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-46aa920a {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n#skillLevelWrapper[data-v-46aa920a] {\n  display: inline-block;\n  margin: 0 2%;\n}\nfieldset[data-v-46aa920a] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-46aa920a] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-46aa920a] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.input_level_1:checked + .radio-inline__label[data-v-46aa920a] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: #00cc99;\n}\n.input_level_2:checked + .radio-inline__label[data-v-46aa920a] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: lightcoral;\n}\n.input_level_3:checked + .radio-inline__label[data-v-46aa920a] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: #cc9933;\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-46aa920a] {\n  outline-color: #cccccc;\n  outline-offset: 0px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-46aa920a] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-46aa920a] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n#skill-level-1[data-v-46aa920a] {\n  background-color: #00cc99;\n}\n#skill-level-2[data-v-46aa920a] {\n  background-color: lightcoral;\n}\n#skill-level-3[data-v-46aa920a] {\n  background-color: #cc9933;\n}\n#btn-primary-skill-list[data-v-46aa920a] {\n  position: relative;\n  right: 2.3rem;\n  padding: 6px;\n  font-size: 230%;\n}\n.modal-content[data-v-46aa920a] {\n  text-align: center;\n}\n#exampleModalLongTitle[data-v-46aa920a],\n#hama-modal-close-btn[data-v-46aa920a] {\n  display: block;\n  margin: 0 auto;\n}\n", ""]);
 
 // exports
 
@@ -3977,7 +4256,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-8cf8dc74] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-8cf8dc74] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-8cf8dc74] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n}\n#upload-image-btn[data-v-8cf8dc74] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-8cf8dc74] {\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-8cf8dc74] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-8cf8dc74] {\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.bounce-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-8cf8dc74] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-8cf8dc74] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font: bold;\n  padding: 10px 25px;\n  background-color: lightcyan;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-8cf8dc74] :hover {\n  background-color: aqua;\n}\n.close[data-v-8cf8dc74] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-8cf8dc74] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-8cf8dc74] {\n  width: 300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-8cf8dc74] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-8cf8dc74] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-8cf8dc74] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.list-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n.list-enter[data-v-8cf8dc74], .list-leave-to[data-v-8cf8dc74] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n  margin: 0 5% 0 10%;\n}\nfieldset[data-v-8cf8dc74] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-8cf8dc74] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-8cf8dc74] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-8cf8dc74] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-8cf8dc74] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-8cf8dc74] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-8cf8dc74] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-8cf8dc74] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n}\n#upload-image-btn[data-v-8cf8dc74] {\n  width: 70%;\n  margin: 0 auto;\n}\n.vue-simple-suggest-wrapper[data-v-8cf8dc74] {\n  width: 40%;\n  height: 100%;\n  margin-top: 70px;\n}\n.vue-simple-suggest-form[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 70%;\n  height: 100%;\n}\n#result-list-wrapper[data-v-8cf8dc74] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-8cf8dc74] {\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.bounce-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-8cf8dc74] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-8cf8dc74] {\n  display: inline-block;\n  position: relative;\n  font-size: 200%;\n  font: bold;\n  padding: 10px 25px;\n  background-color: lightcyan;\n  margin-right: 35px;\n  border-radius: 10px;\n}\n.list-item[data-v-8cf8dc74] :hover {\n  background-color: aqua;\n}\n.close[data-v-8cf8dc74] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-8cf8dc74] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-8cf8dc74] {\n  width: 300%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-8cf8dc74] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 10%;\n}\n#carrerSearchFormWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 40%;\n}\n#button-addon2[data-v-8cf8dc74] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-8cf8dc74] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-8cf8dc74 0.5s;\n          animation: bounce-in-data-v-8cf8dc74 0.5s;\n}\n.list-leave-active[data-v-8cf8dc74] {\n  animation: bounce-in-data-v-8cf8dc74 0.5s reverse;\n}\n.list-enter[data-v-8cf8dc74], .list-leave-to[data-v-8cf8dc74] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-8cf8dc74 {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n  margin: 0 5% 0 10%;\n}\nfieldset[data-v-8cf8dc74] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-8cf8dc74] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-8cf8dc74] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-8cf8dc74] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-8cf8dc74] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-8cf8dc74] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-8cf8dc74] {\n  display: inline-block;\n  width: 20%;\n}\n", ""]);
 
 // exports
 
@@ -3996,7 +4275,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.user-form-left[data-v-03e6892d] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-03e6892d] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-03e6892d] {\n  display: inline-block;\n  /* TODO CSS部分でse_career_formのwidthが変更できないのはなぜ？HTMLのタグ内に直接書き込む方法ではきちんと動くのに。 */\n  /* width: 50%; */\n}\n#introduction-form[data-v-03e6892d] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-03e6892d] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-03e6892d] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n#upload-image-btn-wrapper[data-v-03e6892d] {\n  text-align: center;\n}\n#upload-image-btn[data-v-03e6892d] {\n  width: 70%;\n  margin: 0 auto;\n}\n\n/* flexboxを使ってみる */\n.vue-simple-suggest-wrapper[data-v-03e6892d] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n.vue-simple-suggest-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 40%;\n}\n#result-list-wrapper[data-v-03e6892d] {\n  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */\n}\n.bounce-enter-active[data-v-03e6892d] {\n  -webkit-animation: bounce-in-data-v-03e6892d 0.5s;\n          animation: bounce-in-data-v-03e6892d 0.5s;\n}\n.bounce-leave-active[data-v-03e6892d] {\n  animation: bounce-in-data-v-03e6892d 0.5s reverse;\n}\n@-webkit-keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n.selected-tag-with-anime-wrapper[data-v-03e6892d] {\n  width: 100%;\n}\n.selected-tag-with-anime[data-v-03e6892d] {\n  display: inline-block;\n  width: 600px;\n  padding: 20px;\n  font-size: 160%;\n  background-color: red;\n  border-radius: 15px;\n}\n.list-item[data-v-03e6892d] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.list-item[data-v-03e6892d] :hover {\n  background-color: aqua;\n}\n.close[data-v-03e6892d] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-03e6892d] {\n  font-size: 120%;\n}\n\n/* 追加するスキルを検索するフォーム */\n.mb-3[data-v-03e6892d] {\n  width: 100%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-03e6892d] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 20%;\n}\n#carrerSearchFormWrapper[data-v-03e6892d] {\n  display: inline-block;\n  width: 100%;\n}\n#button-addon2[data-v-03e6892d] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-03e6892d] {\n  /* transition: all 1s; */\n  -webkit-animation: bounce-in-data-v-03e6892d 0.5s;\n          animation: bounce-in-data-v-03e6892d 0.5s;\n}\n.list-leave-active[data-v-03e6892d] {\n  animation: bounce-in-data-v-03e6892d 0.5s reverse;\n}\n.list-enter[data-v-03e6892d], .list-leave-to[data-v-03e6892d] /* .list-leave-active for below version 2.1.8 */ {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n/* @import url(https://fonts.googleapis.com/css?family=Open+Sans); */\n#skillLevelWrapper[data-v-03e6892d] {\n  display: inline-block;\n  margin: 0 2%;\n}\nfieldset[data-v-03e6892d] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-03e6892d] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-03e6892d] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:checked + .radio-inline__label[data-v-03e6892d] {\n  background: #ff8856;\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-03e6892d] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-03e6892d] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-03e6892d] {\n  display: inline-block;\n  width: 20%;\n  font-size: 130%;\n}\n#submitBtnWrapper[data-v-03e6892d] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n#submitBtn[data-v-03e6892d] {\n  flex-basis: 20%;\n}\n", ""]);
+exports.push([module.i, "\n.user-form-left[data-v-03e6892d] {\n  display: inline-block;\n  width: 72%;\n}\n.user-form-left-top[data-v-03e6892d] {\n  display: inline-block;\n  width: 100%;\n}\n#name-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 60%;\n}\n#se-career-form[data-v-03e6892d] {\n  display: inline-block;\n}\n#introduction-form[data-v-03e6892d] {\n  display: inline-block;\n  margin-top: 3%;\n  width: 100%;\n}\n.user-form-right[data-v-03e6892d] {\n  display: inline-block;\n  width: 23%;\n  margin-left: 3%;\n}\n#user-image[data-v-03e6892d] {\n  width: 94%;\n  padding: 1%;\n  border: 1px solid lightslategray;\n}\n.vue-simple-suggest-wrapper[data-v-03e6892d] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n.vue-simple-suggest-form[data-v-03e6892d] {\n  display: inline-block;\n  width: 40%;\n}\n.list-item[data-v-03e6892d] {\n  display: inline-block;\n  position: relative;\n  font-size: 100%;\n  font: bold;\n  padding: 15px 15px;\n  background-color: lightcyan;\n  margin-right: 20px;\n  margin-top: 10px;\n  border-radius: 10px;\n}\n.close[data-v-03e6892d] {\n  position: absolute;\n  right: -12px;\n  top: -12px;\n  opacity: 0.2;\n  -webkit-animation: all 5s;\n          animation: all 5s;\n}\n.hama-close[data-v-03e6892d] {\n  font-size: 120%;\n}\n.mb-3[data-v-03e6892d] {\n  width: 100%;\n}\n\n/* 追加ボタンのラッパー */\n.input-group-append[data-v-03e6892d] {\n  display: inline-block;\n  margin: 0 5%;\n  width: 20%;\n}\n#carrerSearchFormWrapper[data-v-03e6892d] {\n  display: inline-block;\n  width: 100%;\n}\n#button-addon2[data-v-03e6892d] {\n  display: inline-block;\n  color: aliceblue;\n  font: bolder;\n  background: green;\n}\n.list-enter-active[data-v-03e6892d] {\n  -webkit-animation: bounce-in-data-v-03e6892d 0.5s;\n          animation: bounce-in-data-v-03e6892d 0.5s;\n}\n.list-leave-active[data-v-03e6892d] {\n  animation: bounce-in-data-v-03e6892d 0.5s reverse;\n}\n.list-enter[data-v-03e6892d],\n.list-leave-to[data-v-03e6892d] {\n  opacity: 0;\n  transform: translateY(30px);\n}\n@-webkit-keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes bounce-in-data-v-03e6892d {\n0% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1.5);\n}\n100% {\n    transform: scale(1);\n}\n}\n\n/* レベル選択のラジオボタンの装飾 */\n#skillLevelWrapper[data-v-03e6892d] {\n  display: inline-block;\n  margin: 0 2%;\n}\nfieldset[data-v-03e6892d] {\n  display: inline-block;\n  border: none;\n  text-align: center;\n}\n.radio-inline__input[data-v-03e6892d] {\n  margin: 0 5px;\n  clip: rect(1px, 1px, 1px, 1px);\n  position: absolute !important;\n}\n.radio-inline__label[data-v-03e6892d] {\n  display: inline-block;\n  padding: 0.5rem 1rem;\n  margin-right: 1px;\n  border-radius: 3px;\n  transition: all 0.2s;\n  background-color: lightgrey;\n}\n.radio-inline__input:focus + .radio-inline__label[data-v-03e6892d] {\n  outline-color: #4d90fe;\n  outline-offset: -2px;\n  outline-style: auto;\n  outline-width: 5px;\n}\n#registrate-btn-wrapper[data-v-03e6892d] {\n  text-align: center;\n  margin-top: 100px;\n}\n#registrate-btn[data-v-03e6892d] {\n  display: inline-block;\n  width: 20%;\n}\n#submitBtnWrapper[data-v-03e6892d] {\n  display: flex;\n  justify-content: center;\n  margin-top: 20px;\n}\n#submitBtn[data-v-03e6892d] {\n  flex-basis: 20%;\n}\n.input_level_1:checked + .radio-inline__label[data-v-03e6892d] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: #00cc99;\n}\n.input_level_2:checked + .radio-inline__label[data-v-03e6892d] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: lightcoral;\n}\n.input_level_3:checked + .radio-inline__label[data-v-03e6892d] {\n  color: #fff;\n  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);\n  background: #cc9933;\n}\n#skill-level-1[data-v-03e6892d] {\n  background-color: #00cc99;\n}\n#skill-level-2[data-v-03e6892d] {\n  background-color: lightcoral;\n}\n#skill-level-3[data-v-03e6892d] {\n  background-color: #cc9933;\n}\n#btn-primary-skill-list[data-v-03e6892d] {\n  position: relative;\n  right: 2.3rem;\n  padding: 6px;\n  font-size: 230%;\n}\n.modal-content[data-v-03e6892d] {\n  text-align: center;\n}\n#exampleModalLongTitle[data-v-03e6892d],\n#hama-modal-close-btn[data-v-03e6892d] {\n  display: block;\n  margin: 0 auto;\n}\n", ""]);
 
 // exports
 
@@ -21599,6 +21878,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SearchComponent.vue?vue&type=style&index=0&id=89b0c3cc&scoped=true&lang=css&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SearchComponent.vue?vue&type=style&index=0&id=89b0c3cc&scoped=true&lang=css& ***!
@@ -21608,6 +21917,36 @@ process.umask = function() { return 0; };
 
 
 var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./SearchComponent.vue?vue&type=style&index=0&id=89b0c3cc&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SearchComponent.vue?vue&type=style&index=0&id=89b0c3cc&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -22303,10 +22642,10 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&":
-/*!******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55& ***!
-  \******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true& ***!
+  \******************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22388,7 +22727,6 @@ var render = function() {
                 "filter-by-query": true,
                 "aria-autocomplete": "off"
               },
-              on: { "suggestion-click": _vm.creatSearchTag },
               model: {
                 value: _vm.selected,
                 callback: function($$v) {
@@ -22399,20 +22737,24 @@ var render = function() {
             },
             [
               _c("div", { staticClass: "input-group mb-3" }, [
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    placeholder: "Search",
-                    "aria-label": "Recipient's username",
-                    "aria-describedby": "button-addon2",
-                    autocomplete: "off",
-                    id: "carrerSearchForm"
-                  }
-                })
+                _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      placeholder: "Search",
+                      "aria-label": "Recipient's username",
+                      "aria-describedby": "button-addon2",
+                      id: "carrerSearchForm",
+                      autocomplete: "off"
+                    }
+                  })
+                ])
               ])
             ]
           ),
+          _vm._v(" "),
+          _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "input-group-append" }, [
             _c(
@@ -22422,23 +22764,36 @@ var render = function() {
                 attrs: { type: "button", id: "button-addon2" },
                 on: { click: _vm.addSearchTag }
               },
-              [_vm._v("追加")]
+              [_vm._v("検索")]
             )
           ])
         ],
         1
       ),
       _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
       _c(
         "div",
         [
           _c(
             "transition-group",
-            { attrs: { name: "list", tag: "p" } },
+            {
+              staticClass: "list-item-wrapper",
+              attrs: { name: "list", tag: "div" }
+            },
             _vm._l(_vm.searchWordLists, function(searchWordList, index) {
               return _c(
                 "span",
-                { key: searchWordList, staticClass: "list-item" },
+                {
+                  key: searchWordList,
+                  staticClass: "list-item",
+                  attrs: { id: _vm.wordColorChange(index) }
+                },
                 [
                   _c(
                     "button",
@@ -22447,7 +22802,8 @@ var render = function() {
                       attrs: { type: "button", "aria-label": "Close" },
                       on: {
                         click: function($event) {
-                          return _vm.clickSearchBtn(index)
+                          _vm.searchWordLists.splice(index, 1)
+                          _vm.adjustpostSkillData(index)
                         }
                       }
                     },
@@ -22492,7 +22848,6 @@ var render = function() {
                       )
                     ]
                   ),
-                  _vm._v(" "),
                   _vm._v("\n        " + _vm._s(searchWordList) + "\n      ")
                 ]
               )
@@ -22542,17 +22897,75 @@ var render = function() {
     2
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "skillLevelWrapper" } }, [
+      _c("fieldset", { attrs: { id: "skillLevelFielfset" } }, [
+        _c("input", {
+          staticClass: "radio-inline__input btn-outline-primary input_level_1",
+          attrs: {
+            id: "item-1",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-1",
+            checked: "checked"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-1" } },
+          [_vm._v("1")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input input_level_2",
+          attrs: {
+            id: "item-2",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-2"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-2" } },
+          [_vm._v("2")]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "radio-inline__input input_level_3",
+          attrs: {
+            id: "item-3",
+            type: "radio",
+            name: "accessible-radio",
+            value: "item-3"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          { staticClass: "radio-inline__label", attrs: { for: "item-3" } },
+          [_vm._v("3")]
+        )
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&":
-/*!****************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2& ***!
-  \****************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22570,13 +22983,11 @@ var render = function() {
       _vm._v(" "),
       _c(
         "tbody",
-        _vm._l(_vm.users, function(user, index) {
-          return _c("tr", { key: user.id }, [
+        _vm._l(_vm.users, function(user) {
+          return _c("tr", { key: user.id, attrs: { id: "introductionText" } }, [
             _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(user.name))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(user.se_career) + "年目")]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(user.introduction))]),
+            _c("td", [_vm._v(_vm._s(user.se_career))]),
             _vm._v(" "),
             _c(
               "td",
@@ -22615,6 +23026,11 @@ var render = function() {
                     type: "button",
                     "data-toggle": "modal",
                     "data-target": "#exampleModal"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.insertDeleteTarget(user.id)
+                    }
                   }
                 },
                 [_vm._v("Delete")]
@@ -22650,7 +23066,11 @@ var render = function() {
                             "button",
                             {
                               staticClass: "btn btn-secondary",
-                              attrs: { type: "button", "data-dismiss": "modal" }
+                              attrs: {
+                                type: "button",
+                                "data-dismiss": "modal",
+                                id: "model-close-btn"
+                              }
                             },
                             [_vm._v("Close")]
                           ),
@@ -22661,7 +23081,7 @@ var render = function() {
                               staticClass: "btn btn-danger",
                               on: {
                                 click: function($event) {
-                                  return _vm.userDelete(index, user.id)
+                                  return _vm.userDelete()
                                 }
                               }
                             },
@@ -22691,8 +23111,6 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("SE")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Introduction")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Detail")]),
         _vm._v(" "),
@@ -22825,10 +23243,6 @@ var render = function() {
                       }
                     },
                     [
-                      _c("option", { attrs: { selected: "" } }, [
-                        _vm._v("Choose...")
-                      ]),
-                      _vm._v(" "),
                       _c("option", { attrs: { value: "1" } }, [_vm._v("1")]),
                       _vm._v(" "),
                       _c("option", { attrs: { value: "2" } }, [_vm._v("2")]),
@@ -22839,9 +23253,73 @@ var render = function() {
                       _vm._v(" "),
                       _c("option", { attrs: { value: "5" } }, [_vm._v("5")]),
                       _vm._v(" "),
-                      _c("option", { attrs: { value: "6" } }, [_vm._v("6~10")]),
+                      _c("option", { attrs: { value: "6" } }, [_vm._v("6")]),
                       _vm._v(" "),
-                      _c("option", { attrs: { value: "7" } }, [_vm._v("10~")])
+                      _c("option", { attrs: { value: "7" } }, [_vm._v("7")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "8" } }, [_vm._v("8")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "9" } }, [_vm._v("9")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "11" } }, [_vm._v("11")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "12" } }, [_vm._v("12")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "13" } }, [_vm._v("13")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "14" } }, [_vm._v("14")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "15" } }, [_vm._v("15")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "16" } }, [_vm._v("16")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "17" } }, [_vm._v("17")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "18" } }, [_vm._v("18")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "19" } }, [_vm._v("19")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "20" } }, [_vm._v("20")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "21" } }, [_vm._v("21")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "22" } }, [_vm._v("22")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "23" } }, [_vm._v("23")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "24" } }, [_vm._v("24")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "25" } }, [_vm._v("25")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "26" } }, [_vm._v("26")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "28" } }, [_vm._v("28")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "29" } }, [_vm._v("29")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "30" } }, [_vm._v("30")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "31" } }, [_vm._v("31")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "32" } }, [_vm._v("32")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "33" } }, [_vm._v("33")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "34" } }, [_vm._v("34")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "35" } }, [_vm._v("35")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "36" } }, [_vm._v("36")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "37" } }, [_vm._v("37")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "38" } }, [_vm._v("38")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "39" } }, [_vm._v("39")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "40" } }, [_vm._v("40")])
                     ]
                   )
                 ]
@@ -22927,7 +23405,6 @@ var render = function() {
                   "filter-by-query": true,
                   "aria-autocomplete": "off"
                 },
-                on: { "suggestion-click": _vm.creatSearchTag },
                 model: {
                   value: _vm.selected,
                   callback: function($$v) {
@@ -22955,7 +23432,85 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _vm._m(0),
+            _c(
+              "svg",
+              {
+                staticClass: "bi bi-info-square btn",
+                attrs: {
+                  width: "1em",
+                  height: "1em",
+                  viewBox: "0 0 16 16",
+                  fill: "currentColor",
+                  xmlns: "http://www.w3.org/2000/svg",
+                  "data-toggle": "modal",
+                  "data-target": "#exampleModalLong",
+                  id: "btn-primary-skill-list"
+                }
+              },
+              [
+                _c("path", {
+                  attrs: {
+                    "fill-rule": "evenodd",
+                    d:
+                      "M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+                  }
+                }),
+                _vm._v(" "),
+                _c("path", {
+                  attrs: {
+                    d:
+                      "M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"
+                  }
+                }),
+                _vm._v(" "),
+                _c("circle", { attrs: { cx: "8", cy: "4.5", r: "1" } })
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "modal fade",
+                attrs: {
+                  id: "exampleModalLong",
+                  tabindex: "-1",
+                  role: "dialog",
+                  "aria-labelledby": "exampleModalLongTitle",
+                  "aria-hidden": "true"
+                }
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "modal-dialog", attrs: { role: "document" } },
+                  [
+                    _c("div", { staticClass: "modal-content" }, [
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "modal-body" },
+                        _vm._l(_vm.simpleSuggestionList, function(skillName) {
+                          return _c(
+                            "p",
+                            {
+                              key: skillName.id,
+                              attrs: { id: "introductionText" }
+                            },
+                            [_vm._v(_vm._s(skillName))]
+                          )
+                        }),
+                        0
+                      ),
+                      _vm._v(" "),
+                      _vm._m(1)
+                    ])
+                  ]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(2),
             _vm._v(" "),
             _c("div", { staticClass: "input-group-append" }, [
               _c(
@@ -22990,7 +23545,11 @@ var render = function() {
               _vm._l(_vm.searchWordLists, function(searchWordList, index) {
                 return _c(
                   "span",
-                  { key: searchWordList, staticClass: "list-item" },
+                  {
+                    key: searchWordList,
+                    staticClass: "list-item",
+                    attrs: { id: _vm.wordColorChange(index) }
+                  },
                   [
                     _c(
                       "button",
@@ -22999,7 +23558,8 @@ var render = function() {
                         attrs: { type: "button", "aria-label": "Close" },
                         on: {
                           click: function($event) {
-                            return _vm.searchWordLists.splice(index, 1)
+                            _vm.searchWordLists.splice(index, 1)
+                            _vm.adjustpostSkillData(index)
                           }
                         }
                       },
@@ -23082,10 +23642,54 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLongTitle" } },
+        [_vm._v("スキル一覧")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            id: "hama-modal-close-btn"
+          }
+        },
+        [_vm._v("閉じる")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { attrs: { id: "skillLevelWrapper" } }, [
       _c("fieldset", { attrs: { id: "skillLevelFielfset" } }, [
         _c("input", {
-          staticClass: "radio-inline__input btn-outline-primary",
+          staticClass: "radio-inline__input btn-outline-primary input_level_1",
           attrs: {
             id: "item-1",
             type: "radio",
@@ -23102,7 +23706,7 @@ var staticRenderFns = [
         ),
         _vm._v(" "),
         _c("input", {
-          staticClass: "radio-inline__input",
+          staticClass: "radio-inline__input input_level_2",
           attrs: {
             id: "item-2",
             type: "radio",
@@ -23118,7 +23722,7 @@ var staticRenderFns = [
         ),
         _vm._v(" "),
         _c("input", {
-          staticClass: "radio-inline__input",
+          staticClass: "radio-inline__input input_level_3",
           attrs: {
             id: "item-3",
             type: "radio",
@@ -23299,6 +23903,18 @@ var render = function() {
         }),
         0
       )
+    ]),
+    _vm._v(" "),
+    _c("div", { attrs: { id: "registrate-btn-wrapper" } }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button", id: "registrate-btn" },
+          on: { click: _vm.toEditPage }
+        },
+        [_vm._v("編集する")]
+      )
     ])
   ])
 }
@@ -23339,383 +23955,443 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", [
-      _c(
-        "form",
-        {
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.updateUser($event)
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "form-row" }, [
-            _c("div", { staticClass: "user-form-left" }, [
-              _c("div", { staticClass: "user-form-left-top" }, [
-                _c(
-                  "div",
-                  { staticClass: "form-group", attrs: { id: "name-form" } },
-                  [
-                    _c("label", { attrs: { for: "name" } }, [_vm._v("氏名")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.user.name,
-                          expression: "user.name"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", placeholder: "氏名" },
-                      domProps: { value: _vm.user.name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.user, "name", $event.target.value)
-                        }
-                      }
-                    })
-                  ]
-                ),
+      _c("div", { staticClass: "form-row" }, [
+        _c("div", { staticClass: "user-form-left" }, [
+          _c("div", { staticClass: "user-form-left-top" }, [
+            _c(
+              "div",
+              { staticClass: "form-group", attrs: { id: "name-form" } },
+              [
+                _c("label", { attrs: { for: "name" } }, [_vm._v("氏名")]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group col-md-4",
-                    attrs: { id: "se-career-form" }
-                  },
-                  [
-                    _c("label", { attrs: { for: "se_career" } }, [
-                      _vm._v("エンジニア歴")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.user.se_career,
-                          expression: "user.se_career"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.user.se_career },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.user, "se_career", $event.target.value)
-                        }
-                      }
-                    })
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "form-group",
-                  attrs: { id: "introduction-form" }
-                },
-                [
-                  _c("label", { attrs: { for: "introduction" } }, [
-                    _vm._v("自己紹介")
-                  ]),
-                  _vm._v(" "),
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.user.introduction,
-                        expression: "user.introduction"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { rows: "4" },
-                    domProps: { value: _vm.user.introduction },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.user, "introduction", $event.target.value)
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.user.name,
+                      expression: "user.name"
                     }
-                  })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "user-form-right" }, [
-              _c("label", { attrs: { for: "inputEmail4" } }, [
-                _vm._v("アイコン")
-              ]),
-              _vm._v(" "),
-              _vm.user.img_path === null
-                ? _c("img", {
-                    attrs: {
-                      src: "/image/face2.jpg",
-                      alt: "",
-                      id: "user-image"
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", placeholder: "氏名" },
+                  domProps: { value: _vm.user.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.user, "name", $event.target.value)
                     }
-                  })
-                : _c("img", {
-                    attrs: {
-                      src: "/storage/" + _vm.user.img_path,
-                      alt: "画像はありません",
-                      id: "user-image"
-                    }
-                  })
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("hr"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("table", { staticClass: "table table-hover" }, [
-            _vm._m(1),
+                  }
+                })
+              ]
+            ),
             _vm._v(" "),
             _c(
-              "tbody",
-              _vm._l(_vm.tags, function(tag, index) {
-                return _c("tr", { attrs: { id: "tags-wrapper" } }, [
-                  _c("td", [_vm._v(_vm._s(tag.ct_name))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(tag.ct_level))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger",
-                        on: {
-                          click: function($event) {
-                            return _vm.skillDelete(tag.id)
-                          }
-                        }
-                      },
-                      [_vm._v("Delete")]
-                    )
-                  ])
-                ])
-              }),
-              0
+              "div",
+              {
+                staticClass: "form-group col-md-4",
+                attrs: { id: "se-career-form" }
+              },
+              [
+                _c("label", { attrs: { for: "se_career" } }, [
+                  _vm._v("エンジニア歴")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.user.se_career,
+                      expression: "user.se_career"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.user.se_career },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.user, "se_career", $event.target.value)
+                    }
+                  }
+                })
+              ]
             )
           ]),
           _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("hr"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
           _c(
             "div",
-            { staticClass: "vue-simple-suggest-wrapper" },
+            { staticClass: "form-group", attrs: { id: "introduction-form" } },
             [
-              _c(
-                "vue-simple-suggest",
-                {
-                  staticClass: "vue-simple-suggest-form",
-                  attrs: {
-                    "min-length": 2,
-                    list: _vm.simpleSuggestionList,
-                    "filter-by-query": true,
-                    "aria-autocomplete": "off"
-                  },
-                  on: { "suggestion-click": _vm.creatSearchTag },
-                  model: {
-                    value: _vm.selected,
-                    callback: function($$v) {
-                      _vm.selected = $$v
-                    },
-                    expression: "selected"
+              _c("label", { attrs: { for: "introduction" } }, [
+                _vm._v("自己紹介")
+              ]),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.user.introduction,
+                    expression: "user.introduction"
                   }
-                },
-                [
-                  _c("div", { staticClass: "input-group mb-3" }, [
-                    _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          placeholder: "Search",
-                          "aria-label": "Recipient's username",
-                          "aria-describedby": "button-addon2",
-                          id: "carrerSearchForm",
-                          autocomplete: "off"
-                        }
-                      })
-                    ])
-                  ])
-                ]
-              ),
+                ],
+                staticClass: "form-control",
+                attrs: { rows: "4" },
+                domProps: { value: _vm.user.introduction },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.user, "introduction", $event.target.value)
+                  }
+                }
+              })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "user-form-right" }, [
+          _c("label", { attrs: { for: "inputEmail4" } }, [_vm._v("アイコン")]),
+          _vm._v(" "),
+          _vm.user.img_path === null
+            ? _c("img", {
+                attrs: { src: "/image/face2.jpg", alt: "", id: "user-image" }
+              })
+            : _c("img", {
+                attrs: {
+                  src: "/storage/" + _vm.user.img_path,
+                  alt: "画像はありません",
+                  id: "user-image"
+                }
+              }),
+          _vm._v(" "),
+          _c("div", { staticClass: "content" }, [
+            _c("p", [
+              _c("input", {
+                attrs: { type: "file" },
+                on: { change: _vm.imageSelect }
+              })
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "submitBtnWrapper" } }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { id: "submitBtn", type: "button" },
+            on: { click: _vm.updateUser }
+          },
+          [_vm._v("更新")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("table", { staticClass: "table table-hover" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.tags, function(tag, index) {
+            return _c("tr", { attrs: { id: "tags-wrapper" } }, [
+              _c("td", [_vm._v(_vm._s(tag.ct_name))]),
               _vm._v(" "),
-              _vm._m(2),
+              _c("td", [_vm._v(_vm._s(tag.ct_level))]),
               _vm._v(" "),
-              _c("div", { staticClass: "input-group-append" }, [
+              _c("td", [
                 _c(
                   "button",
                   {
-                    staticClass: "btn btn-outline-secondary btn-info",
-                    attrs: { type: "button", id: "button-addon2" },
-                    on: { click: _vm.addSearchTag }
+                    staticClass: "btn btn-danger",
+                    on: {
+                      click: function($event) {
+                        return _vm.skillDelete(tag.id)
+                      }
+                    }
                   },
-                  [_vm._v("追加")]
+                  [_vm._v("Delete")]
                 )
               ])
-            ],
-            1
+            ])
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "vue-simple-suggest-wrapper" },
+        [
+          _c(
+            "vue-simple-suggest",
+            {
+              staticClass: "vue-simple-suggest-form",
+              attrs: {
+                "min-length": 2,
+                list: _vm.simpleSuggestionList,
+                "filter-by-query": true,
+                "aria-autocomplete": "off"
+              },
+              model: {
+                value: _vm.selected,
+                callback: function($$v) {
+                  _vm.selected = $$v
+                },
+                expression: "selected"
+              }
+            },
+            [
+              _c("div", { staticClass: "input-group mb-3" }, [
+                _c("div", { attrs: { id: "carrerSearchFormWrapper" } }, [
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      placeholder: "Search",
+                      "aria-label": "Recipient's username",
+                      "aria-describedby": "button-addon2",
+                      id: "carrerSearchForm",
+                      autocomplete: "off"
+                    }
+                  })
+                ])
+              ])
+            ]
           ),
           _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("br"),
+          _c(
+            "svg",
+            {
+              staticClass: "bi bi-info-square btn",
+              attrs: {
+                width: "1em",
+                height: "1em",
+                viewBox: "0 0 16 16",
+                fill: "currentColor",
+                xmlns: "http://www.w3.org/2000/svg",
+                "data-toggle": "modal",
+                "data-target": "#exampleModalLong",
+                id: "btn-primary-skill-list"
+              }
+            },
+            [
+              _c("path", {
+                attrs: {
+                  "fill-rule": "evenodd",
+                  d:
+                    "M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"
+                }
+              }),
+              _vm._v(" "),
+              _c("circle", { attrs: { cx: "8", cy: "4.5", r: "1" } })
+            ]
+          ),
           _vm._v(" "),
           _c(
             "div",
+            {
+              staticClass: "modal fade",
+              attrs: {
+                id: "exampleModalLong",
+                tabindex: "-1",
+                role: "dialog",
+                "aria-labelledby": "exampleModalLongTitle",
+                "aria-hidden": "true"
+              }
+            },
             [
               _c(
-                "transition-group",
-                {
-                  staticClass: "list-item-wrapper",
-                  attrs: { name: "list", tag: "div" }
-                },
-                _vm._l(_vm.searchWordLists, function(searchWordList, index) {
-                  return _c(
-                    "span",
-                    { key: searchWordList, staticClass: "list-item" },
-                    [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "close",
-                          attrs: { type: "button", "aria-label": "Close" },
-                          on: {
-                            click: function($event) {
-                              return _vm.searchWordLists.splice(index, 1)
-                            }
-                          }
-                        },
-                        [
-                          _c(
-                            "svg",
-                            {
-                              staticClass: "bi bi-x-circle hama-close",
-                              attrs: {
-                                width: "1em",
-                                height: "1em",
-                                viewBox: "0 0 16 16",
-                                fill: "currentColor",
-                                xmlns: "http://www.w3.org/2000/svg"
-                              }
-                            },
-                            [
-                              _c("path", {
-                                attrs: {
-                                  "fill-rule": "evenodd",
-                                  d:
-                                    "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("path", {
-                                attrs: {
-                                  "fill-rule": "evenodd",
-                                  d:
-                                    "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("path", {
-                                attrs: {
-                                  "fill-rule": "evenodd",
-                                  d:
-                                    "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
-                                }
-                              })
-                            ]
-                          )
-                        ]
-                      ),
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(searchWordList) +
-                          "\n          "
-                      )
-                    ]
-                  )
-                }),
-                0
+                "div",
+                { staticClass: "modal-dialog", attrs: { role: "document" } },
+                [
+                  _c("div", { staticClass: "modal-content" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "modal-body" },
+                      _vm._l(_vm.simpleSuggestionList, function(skillName) {
+                        return _c(
+                          "p",
+                          {
+                            key: skillName.id,
+                            attrs: { id: "introductionText" }
+                          },
+                          [_vm._v(_vm._s(skillName))]
+                        )
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _vm._m(2)
+                  ])
+                ]
               )
-            ],
-            1
+            ]
           ),
           _vm._v(" "),
-          _c("div", { attrs: { id: "registrate-btn-wrapper" } }, [
+          _vm._m(3),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group-append" }, [
             _c(
               "button",
               {
-                staticClass: "btn btn-primary",
-                attrs: {
-                  type: "button",
-                  id: "registrate-btn",
-                  "data-toggle": "tooltip",
-                  "data-placement": "top",
-                  title: "スキルを追加"
-                },
-                on: { click: _vm.postSkillInfos }
+                staticClass: "btn btn-outline-secondary btn-info",
+                attrs: { type: "button", id: "button-addon2" },
+                on: { click: _vm.addSearchTag }
               },
-              [_vm._v("スキル追加")]
+              [_vm._v("追加")]
             )
           ])
-        ]
-      )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "div",
+        [
+          _c(
+            "transition-group",
+            {
+              staticClass: "list-item-wrapper",
+              attrs: { name: "list", tag: "div" }
+            },
+            _vm._l(_vm.searchWordLists, function(searchWordList, index) {
+              return _c(
+                "span",
+                {
+                  key: searchWordList,
+                  staticClass: "list-item",
+                  attrs: { id: _vm.wordColorChange(index) }
+                },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "close",
+                      attrs: { type: "button", "aria-label": "Close" },
+                      on: {
+                        click: function($event) {
+                          _vm.searchWordLists.splice(index, 1)
+                          _vm.adjustpostSkillData(index)
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "svg",
+                        {
+                          staticClass: "bi bi-x-circle hama-close",
+                          attrs: {
+                            width: "1em",
+                            height: "1em",
+                            viewBox: "0 0 16 16",
+                            fill: "currentColor",
+                            xmlns: "http://www.w3.org/2000/svg"
+                          }
+                        },
+                        [
+                          _c("path", {
+                            attrs: {
+                              "fill-rule": "evenodd",
+                              d:
+                                "M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("path", {
+                            attrs: {
+                              "fill-rule": "evenodd",
+                              d:
+                                "M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("path", {
+                            attrs: {
+                              "fill-rule": "evenodd",
+                              d:
+                                "M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"
+                            }
+                          })
+                        ]
+                      )
+                    ]
+                  ),
+                  _vm._v("\n          " + _vm._s(searchWordList) + "\n        ")
+                ]
+              )
+            }),
+            0
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "registrate-btn-wrapper" } }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: {
+              type: "button",
+              id: "registrate-btn",
+              "data-toggle": "tooltip",
+              "data-placement": "top",
+              title: "スキルを追加"
+            },
+            on: { click: _vm.postSkillInfos }
+          },
+          [_vm._v("スキル追加")]
+        )
+      ])
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "submitBtnWrapper" } }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-success",
-          attrs: { id: "submitBtn", type: "submit" }
-        },
-        [_vm._v("更新")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -23734,10 +24410,54 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLongTitle" } },
+        [_vm._v("スキル一覧")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            id: "hama-modal-close-btn"
+          }
+        },
+        [_vm._v("閉じる")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { attrs: { id: "skillLevelWrapper" } }, [
       _c("fieldset", { attrs: { id: "skillLevelFielfset" } }, [
         _c("input", {
-          staticClass: "radio-inline__input btn-outline-primary",
+          staticClass: "radio-inline__input btn-outline-primary input_level_1",
           attrs: {
             id: "item-1",
             type: "radio",
@@ -23754,7 +24474,7 @@ var staticRenderFns = [
         ),
         _vm._v(" "),
         _c("input", {
-          staticClass: "radio-inline__input",
+          staticClass: "radio-inline__input input_level_2",
           attrs: {
             id: "item-2",
             type: "radio",
@@ -23770,7 +24490,7 @@ var staticRenderFns = [
         ),
         _vm._v(" "),
         _c("input", {
-          staticClass: "radio-inline__input",
+          staticClass: "radio-inline__input input_level_3",
           attrs: {
             id: "item-3",
             type: "radio",
@@ -39765,9 +40485,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _HeaderComponent_vue_vue_type_template_id_153bfd55___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./HeaderComponent.vue?vue&type=template&id=153bfd55& */ "./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&");
+/* harmony import */ var _HeaderComponent_vue_vue_type_template_id_153bfd55_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true& */ "./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true&");
 /* harmony import */ var _HeaderComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HeaderComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/HeaderComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _HeaderComponent_vue_vue_type_style_index_0_id_153bfd55_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css& */ "./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -39775,13 +40497,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _HeaderComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _HeaderComponent_vue_vue_type_template_id_153bfd55___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _HeaderComponent_vue_vue_type_template_id_153bfd55___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _HeaderComponent_vue_vue_type_template_id_153bfd55_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _HeaderComponent_vue_vue_type_template_id_153bfd55_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  null,
+  "153bfd55",
   null
   
 )
@@ -39807,19 +40529,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&":
-/*!************************************************************************************!*\
-  !*** ./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55& ***!
-  \************************************************************************************/
+/***/ "./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css&":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css& ***!
+  \**************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_style_index_0_id_153bfd55_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=style&index=0&id=153bfd55&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_style_index_0_id_153bfd55_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_style_index_0_id_153bfd55_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_style_index_0_id_153bfd55_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_style_index_0_id_153bfd55_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_style_index_0_id_153bfd55_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true& ***!
+  \************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_template_id_153bfd55___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./HeaderComponent.vue?vue&type=template&id=153bfd55& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_template_id_153bfd55___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_template_id_153bfd55_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HeaderComponent.vue?vue&type=template&id=153bfd55&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_template_id_153bfd55_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_template_id_153bfd55___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HeaderComponent_vue_vue_type_template_id_153bfd55_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -39921,9 +40659,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserComponent.vue?vue&type=template&id=7f050fd2& */ "./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&");
+/* harmony import */ var _UserComponent_vue_vue_type_template_id_7f050fd2_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true& */ "./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true&");
 /* harmony import */ var _UserComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/UserComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _UserComponent_vue_vue_type_style_index_0_id_7f050fd2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css& */ "./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -39931,13 +40671,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _UserComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _UserComponent_vue_vue_type_template_id_7f050fd2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UserComponent_vue_vue_type_template_id_7f050fd2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  null,
+  "7f050fd2",
   null
   
 )
@@ -39963,19 +40703,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&":
-/*!**********************************************************************************!*\
-  !*** ./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2& ***!
-  \**********************************************************************************/
+/***/ "./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css&":
+/*!************************************************************************************************************!*\
+  !*** ./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css& ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_style_index_0_id_7f050fd2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=style&index=0&id=7f050fd2&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_style_index_0_id_7f050fd2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_style_index_0_id_7f050fd2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_style_index_0_id_7f050fd2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_style_index_0_id_7f050fd2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_style_index_0_id_7f050fd2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true& ***!
+  \**********************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./UserComponent.vue?vue&type=template&id=7f050fd2& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserComponent.vue?vue&type=template&id=7f050fd2&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserComponent_vue_vue_type_template_id_7f050fd2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

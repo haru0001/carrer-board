@@ -53,6 +53,10 @@
         </tr>
       </tbody>
     </table>
+
+    <div id="registrate-btn-wrapper">
+      <button type="button" class="btn btn-primary" id="registrate-btn" v-on:click="toEditPage">編集する</button>
+    </div>
   </div>
 </template>
 
@@ -271,7 +275,6 @@ fieldset {
 #registrate-btn {
   display: inline-block;
   width: 20%;
-  font-size: 130%;
 }
 </style>
 
@@ -316,6 +319,13 @@ export default {
           // alert("スキルを読み込んだ");
         })
         .catch((erorr) => console.log(error));
+    },
+    toEditPage() {
+      this.$router.push({
+        name: "user_edit",
+        // params: { id: this.$route.params.id },
+        params: { id: this.$route.params.id },
+      });
     },
   },
   created() {
