@@ -20,8 +20,6 @@ class UserController extends Controller
 
     public function userCreate(Request $request)
     {
-
-
         if (request()->img_path) {
             $file_name = time() . '.' . request()->img_path->getClientOriginalName();
             request()->img_path->storeAs('public/image', $file_name);
@@ -47,8 +45,8 @@ class UserController extends Controller
 
         $userIdRecord = User::select('id')->where('name', $request->name)->get();
         $userId = $userIdRecord[0]['id'];
-        info("taka-si");
-        info($userId);
+
+
 
         return response()->json(['userId' => $userId]);
     }
@@ -105,23 +103,38 @@ class UserController extends Controller
     // }
     public function userEdit(Request $request)
     {
-        if (request()->img_path) {
+        if (request()->flagEditPicture == "true") {
+            info("flag is true");
             //TODO 古い画像もストレージに溜まっていく一方。削除する処理が必要か？
             $file_name = time() . '.' . request()->img_path->getClientOriginalName();
             request()->img_path->storeAs('public/image', $file_name);
 
             $img_path =
                 'image/' . $file_name;
+
+            $update_column = [
+                'name' => $request->name,
+                'se_career' => $request->se_career,
+                'introduction' => $request->introduction,
+                'img_path' => $img_path
+            ];
         } else {
-            $img_path = null;
+            info("flag is false");
+            $update_column = [
+                'name' => $request->name,
+                'se_career' => $request->se_career,
+                'introduction' => $request->introduction,
+            ];
         }
 
-        $update_column = [
-            'name' => $request->name,
-            'se_career' => $request->se_career,
-            'introduction' => $request->introduction,
-            'img_path' => $img_path
-        ];
+
+        // $update_column = [
+        //     'name' => $request->name,
+        //     'se_career' => $request->se_career,
+        //     'introduction' => $request->introduction,
+        //     'img_path' => $img_path
+        // ];
+
 
         $user = User::select('id', 'name', 'se_career', 'introduction', 'img_path')->where('id', $request->id)->update($update_column);
 
@@ -179,6 +192,7 @@ class UserController extends Controller
     {
 
         $skillInfos = $request->all();
+
         $searchRecord = [];
 
         //ユーザーが検索したいワードがあるTagテーブルの中のレコードを取得
@@ -192,12 +206,48 @@ class UserController extends Controller
             }
         }
 
+
         //上記で取得したスキルのidを使用して中間テーブルでそれに対応するユーザーIDを取得
         $resultUserId = TagMap::select('user_id')->whereIn('tag_id', $searchRecord)->get();
 
+        //あとでarray_count_values（）メソッドを使用したいので、取得した連想配列になっているuser_idの情報を、純粋な配列に置き換える
+        $preAndSearchRecord = [];
+        for ($i = 0; $i < count($resultUserId); $i++) {
+            $preAndSearchRecord[] = $resultUserId[$i]['user_id'];
+        }
+
+        $andSearchArray = array_count_values($preAndSearchRecord);
+        //array_count_values()メソッドでは、その配列の要素が何回重複しているかを新しい連想配列として返してくれる
+        //例えば以下のような形になる。12というキーが2回、23というキーが5回重複していたパターン
+        //     [12] => 2
+        //     [23] => 5
+        //     [163] => 1
+
+        //Vueからの検索対象のスキルの数をカウント
+        //(例)ユーザーが「Java　レベル１」「PHP　レベル２」を検索したい時には、２つの検索するスキルがあるので count($skillInfos)は、2 となる
+        $count = count($skillInfos) - 1;
+        $andSearchRecord = [];
+
+        //AND検索を実現するためのロジックとして、コアの部分の処理。Vueから送られてきたスキルの数と、同じ数だけ(中間テーブルで)tag_idが重複したユーザーのみをフロント側に返却する
+        //(例)ユーザーが「Java　レベル１」「PHP　レベル２」で検索したとする。「Java　レベル１」ではA,B,Cさんが検索ヒット。「PHP　レベル２」ではA,Bさんが検索ヒットする。この時、A,Bさんは２回重複したとみなせる。A,Bさんが、ユーザーが検索したい人になる。この「重複した回数」 = 「送られてきたスキルの数」でAND検索を実現する。
+        foreach ($andSearchArray as $key => $value) {
+            if ($value == $count) {
+                $andSearchRecord[] = $key;
+            } else {
+                continue;
+            }
+        }
+
         //上記で取得したユーザーIDに対応するユーザー情報をUserテーブルから取得
-        $result = User::select('id', 'name', 'se_career', 'introduction', 'img_path')->whereIn('id', $resultUserId)->get();
+        $result = User::select('id', 'name', 'se_career', 'introduction', 'img_path')->whereIn('id', $andSearchRecord)->get();
 
         return $result;
+
+
+        //！注意！
+        //OR検索を使用する時がきた時は以下を使用すればOK
+        // $resultUserId = TagMap::select('user_id')->whereIn('tag_id', $searchRecord)->get();
+        // $result = User::select('id', 'name', 'se_career', 'introduction', 'img_path')->whereIn('id', $resultUserId)->get();
+        // return $result;
     }
 }

@@ -3969,6 +3969,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3988,6 +4030,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       tags: [],
       selected: null,
+      flagEditPicture: false,
       postSkillDeleteData: [],
       simpleSuggestionList: [],
       searchWordLists: [],
@@ -4013,6 +4056,7 @@ __webpack_require__.r(__webpack_exports__);
       formData.append("name", this.user.name);
       formData.append("se_career", this.user.se_career);
       formData.append("introduction", this.user.introduction);
+      formData.append("flagEditPicture", this.flagEditPicture);
       axios.post("/api/user/update", formData).then(function (response) {
         _this.user = response.data.user;
 
@@ -4054,6 +4098,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     imageSelect: function imageSelect(event) {
+      this.flagEditPicture = true;
       this.user.img_path = event.target.files[0];
     },
     addSearchTag: function addSearchTag() {
@@ -23999,27 +24044,119 @@ var render = function() {
                   _vm._v("エンジニア歴")
                 ]),
                 _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.user.se_career,
-                      expression: "user.se_career"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.user.se_career },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.user.se_career,
+                        expression: "user.se_career"
                       }
-                      _vm.$set(_vm.user, "se_career", $event.target.value)
+                    ],
+                    staticClass: "form-control",
+                    staticStyle: { width: "128%" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.user,
+                          "se_career",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
                     }
-                  }
-                })
+                  },
+                  [
+                    _c("option", { attrs: { value: "1" } }, [_vm._v("1")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "2" } }, [_vm._v("2")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "3" } }, [_vm._v("3")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "4" } }, [_vm._v("4")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "5" } }, [_vm._v("5")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "6" } }, [_vm._v("6")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "7" } }, [_vm._v("7")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "8" } }, [_vm._v("8")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "9" } }, [_vm._v("9")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "11" } }, [_vm._v("11")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "12" } }, [_vm._v("12")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "13" } }, [_vm._v("13")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "14" } }, [_vm._v("14")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "15" } }, [_vm._v("15")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "16" } }, [_vm._v("16")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "17" } }, [_vm._v("17")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "18" } }, [_vm._v("18")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "19" } }, [_vm._v("19")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "20" } }, [_vm._v("20")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "21" } }, [_vm._v("21")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "22" } }, [_vm._v("22")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "23" } }, [_vm._v("23")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "24" } }, [_vm._v("24")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "25" } }, [_vm._v("25")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "26" } }, [_vm._v("26")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "28" } }, [_vm._v("28")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "29" } }, [_vm._v("29")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "30" } }, [_vm._v("30")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "31" } }, [_vm._v("31")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "32" } }, [_vm._v("32")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "33" } }, [_vm._v("33")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "34" } }, [_vm._v("34")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "35" } }, [_vm._v("35")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "36" } }, [_vm._v("36")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "37" } }, [_vm._v("37")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "38" } }, [_vm._v("38")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "39" } }, [_vm._v("39")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "40" } }, [_vm._v("40")])
+                  ]
+                )
               ]
             )
           ]),
