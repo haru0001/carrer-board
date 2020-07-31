@@ -567,6 +567,7 @@ export default {
         .post("/api/user/update", formData)
         .then((response) => {
           this.user = response.data.user;
+          //this.$router.pushで画面遷移　同時にparamsも持たせることができる。(便利！)
           this.$router.push({
             name: "user_detail",
             params: { id: this.$route.params.id },
