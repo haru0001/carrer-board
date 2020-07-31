@@ -7,40 +7,86 @@
         :list="simpleSuggestionList"
         :filter-by-query="true"
         aria-autocomplete="off"
-        v-on:suggestion-click="creatSearchTag"
         class="vue-simple-suggest-form"
       >
         <div class="input-group mb-3">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search"
-            aria-label="Recipient's username"
-            aria-describedby="button-addon2"
-            id="carrerSearchForm"
-            autocomplete="off"
-          />
-
-          <div class="input-group-append">
-            <button
-              class="btn btn-outline-secondary btn-info"
-              type="button"
-              id="button-addon2"
-              v-on:click="addSearchTag"
-            >追加</button>
+          <div id="carrerSearchFormWrapper">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search"
+              aria-label="Recipient's username"
+              aria-describedby="button-addon2"
+              id="carrerSearchForm"
+              autocomplete="off"
+            />
           </div>
         </div>
       </vue-simple-suggest>
+      <div id="skillLevelWrapper">
+        <fieldset id="skillLevelFielfset">
+          <input
+            id="item-1"
+            class="radio-inline__input btn-outline-primary input_level_1"
+            type="radio"
+            name="accessible-radio"
+            value="item-1"
+            checked="checked"
+          />
+          <label class="radio-inline__label" for="item-1">1</label>
+          <input
+            id="item-2"
+            class="radio-inline__input input_level_2"
+            type="radio"
+            name="accessible-radio"
+            value="item-2"
+          />
+          <label class="radio-inline__label" for="item-2">2</label>
+          <input
+            id="item-3"
+            class="radio-inline__input input_level_3"
+            type="radio"
+            name="accessible-radio"
+            value="item-3"
+          />
+          <label class="radio-inline__label" for="item-3">3</label>
+        </fieldset>
+      </div>
+
+      <div class="input-group-append">
+        <button
+          class="btn btn-outline-secondary btn-info"
+          type="button"
+          id="button-addon2"
+          v-on:click="addSearchTag"
+        >検索</button>
+      </div>
     </div>
 
+    <!--TODO とりあえずHTMLで幅表生  -->
+    <br />
+    <br />
+    <br />
+
+    <!-- 追加するスキルを表示 -->
     <div>
-      <transition-group name="list" tag="p">
+      <transition-group name="list" tag="div" class="list-item-wrapper">
         <span
-          v-for="searchWordList in searchWordLists"
+          v-for="(searchWordList,
+                                index) in searchWordLists"
           v-bind:key="searchWordList"
           class="list-item"
+          :id="wordColorChange(index)"
         >
-          <button type="button" class="close" aria-label="Close">
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            v-on:click="
+                                        searchWordLists.splice(index, 1);
+                                        adjustpostSkillData(index);
+                                    "
+          >
             <svg
               class="bi bi-x-circle hama-close"
               width="1em"
@@ -63,41 +109,25 @@
               />
             </svg>
           </button>
-          <!-- 検索対象のタグを表示する -->
           {{ searchWordList }}
         </span>
       </transition-group>
     </div>
 
     <div v-for　="resultList in resultLists" id="result-list-wrapper">
-      <div class="card" style="width: 18rem;">
+      <div class="card" style="width: 12rem;">
         <!-- 画像の有無で表示切り替え -->
         <img v-if="resultList.img_path === null" :src="'/image/face2.jpg'" class="card-img-top" />
         <img v-else v-bind:src="'/storage/' + resultList.img_path" class="card-img-top" />
 
         <div class="card-body">
           <h5 class="card-title">{{ resultList.name }}</h5>
-          <p class="card-text">{{ resultList.se_carrer }}</p>
-          <p class="card-text">{{ resultList.introduction }}</p>
+          <!-- 余計なユーザー情報は削除 -->
+          <!-- <p class="card-text">{{ resultList.se_carrer }}</p> -->
+          <!-- <p class="card-text">{{ resultList.introduction }}</p> -->
           <router-link :to="`/user/${resultList.id}`" class="btn btn-primary">詳細ページへ</router-link>
         </div>
       </div>
-
-      <!-- ('id','name','se_carrer','introduction','ct_id')->get(); -->
-      <!-- <th scope="row">{{ resultList.id }}</th>
-            <td>{{ resultList.name }}</td>
-            <td>{{ resultList.se_carrer }}</td>
-            <td>{{ resultList.introduction }}</td>
-      <td>{{ resultList.ct_id }}</td>-->
-      <!-- <td>
-                <router-link v-bind:to="{name: 'task.show', params: {taskId: resultList.id }}">
-                    <button class="btn btn-primary">Show</button>
-                </router-link>
-            </td>
-
-            <td>
-                <button class="btn btn-danger" v-on:click="deleteTask(task.id)">Delete</button>
-      </td>-->
     </div>
   </div>
 </template>
@@ -113,71 +143,38 @@
   width: 25%;
   margin: 20px;
   background-color: cornflowerblue;
-
-  /*todo　背景色の変化でレベル分けを表現するのが簡単だった。*/
 }
 
 .vue-simple-suggest-wrapper {
-  width: 40%;
-  height: 100%;
-  margin: 50px auto;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 .vue-simple-suggest-form {
   display: inline-block;
-  width: 70%;
-  height: 100%;
+  width: 40%;
 }
 #button-addon2 {
   color: aliceblue;
   font: bolder;
 }
 #result-list-wrapper {
-  display: inline-block; /*todo なぜ親要素のコレがinline-blockじゃないと横に並ばないの？ */
+  display: inline-block;
 }
 
-/* hamada　アニメーション実験*/
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.5);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-.selected-tag-with-anime-wrapper {
-  width: 100%;
-}
-.selected-tag-with-anime {
-  display: inline-block;
-  width: 600px;
-  padding: 20px;
-  font-size: 160%;
-  background-color: red;
-  border-radius: 15px;
-}
-/*実験２ */
+/* アニメーション*/
 .list-item {
   display: inline-block;
   position: relative;
-  font-size: 200%;
+  font-size: 100%;
   font: bold;
-  padding: 10px 25px;
-  background-color: red;
-  margin-right: 35px;
+  padding: 15px 15px;
+  background-color: lightcyan;
+  margin-right: 20px;
+  margin-top: 10px;
   border-radius: 10px;
 }
-.list-item :hover {
-  background-color: aqua;
-}
+
 .close {
   position: absolute;
   right: -12px;
@@ -189,14 +186,15 @@
   font-size: 120%;
 }
 
+/* サーチ単語のアニメーション */
 .list-enter-active {
-  /* transition: all 1s; */
   animation: bounce-in 0.5s;
 }
 .list-leave-active {
   animation: bounce-in 0.5s reverse;
 }
-.list-enter, .list-leave-to /* .list-leave-active for below version 2.1.8 */ {
+.list-enter,
+.list-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
@@ -210,6 +208,73 @@
   100% {
     transform: scale(1);
   }
+}
+fieldset {
+  display: inline-block;
+  border: none;
+  text-align: center;
+}
+.radio-inline__input {
+  margin: 0 5px;
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
+}
+
+.radio-inline__label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin-right: 1px;
+  border-radius: 3px;
+  transition: all 0.2s;
+  background-color: lightgrey;
+}
+
+/* 追加ボタンのラッパー */
+.input-group-append {
+  display: inline-block;
+  margin: 0 2%;
+  width: 10%;
+}
+.input_level_1:checked + .radio-inline__label {
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+  background: #00cc99;
+}
+.input_level_2:checked + .radio-inline__label {
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+  background: lightcoral;
+}
+.input_level_3:checked + .radio-inline__label {
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+  background: #cc9933;
+}
+#skill-level-1 {
+  background-color: #00cc99;
+}
+#skill-level-2 {
+  background-color: lightcoral;
+}
+#skill-level-3 {
+  background-color: #cc9933;
+}
+.radio-inline__input {
+  margin: 0 5px;
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
+}
+#skillLevelWrapper {
+  display: inline-block;
+  margin: 0 2%;
+}
+/* 追加するスキルを検索するフォーム */
+.mb-3 {
+  width: 100%;
+}
+#carrerSearchFormWrapper {
+  display: inline-block;
+  width: 100%;
 }
 </style>
 
@@ -227,51 +292,76 @@ export default {
       selected: null,
       simpleSuggestionList: [],
       toggle: false,
-      searchWordLists: [], //ブラウザでどのスキルを選んでいるかを表示させるためだけには、配列にしておくのがベター
-      resultLists: [], //ajaxから挿入
-      object: {
-        title: "How to do lists in Vue",
-        author: "Jane Doe",
-        publishedAt: "2016-04-10",
-      },
-      //   postSearchWordLists: [
-      //     {
-      //       searchSkill: "",
-      //     },
-      //   ],
+      searchWordLists: [],
+      resultLists: [],
+      postSkillData: [
+        {
+          skillName: "",
+          skillLevel: "",
+        },
+      ],
     };
   },
   methods: {
-    creatSearchTag: function () {
-      //
+    adjustpostSkillData: function (index) {
+      this.postSkillData.splice(index + 1, 1);
+
+      //検索スキルを削除したあと、配列が空なら全てのユーザーを表示させる。
+      if (this.searchWordLists.length == 0) {
+        this.getResult();
+        return;
+      }
+
+      axios
+        .get("/api/search_carrer/", {
+          params: this.postSkillData,
+        })
+        .then((res) => {
+          this.resultLists = res.data;
+        })
+        .catch((error) => console.log(error));
     },
 
-    // 押下した時にサーチして、getResult()を実行する。
+    //押下した時に検索を実行する
     addSearchTag: function () {
       // タグ検索フォームを空にする
       $("#carrerSearchForm").val("");
 
-      //ユーザーが指定したタグを、タグ管理リスト(searchWordLists)に追加
+      //スキルレベルのラジオボタンの値を取得
+      var elements = document.getElementsByName("accessible-radio");
+
+      //選択されたレベルをチェック
+      var selectSkillLevel = 0;
+      if (elements[0].checked == true) {
+        selectSkillLevel = 1;
+      } else if (elements[1].checked == true) {
+        selectSkillLevel = 2;
+      } else if (elements[2].checked == true) {
+        selectSkillLevel = 3;
+      } else {
+        alert("レベルを正しく選択してください。");
+      }
+
+      this.postSkillData.push({
+        skillName: this.selected,
+        skillLevel: selectSkillLevel,
+      });
+
       //画面に選択したスキルTagを表示させるために、配列に格納する
       this.searchWordLists.push(this.selected);
-
-      //JSONでデータのやり取りを行うためにJSON形式にする
-      //TODO 本当にこれはJSONか？
-      const data = {
-        searchWord: this.searchWordLists,
-      };
-
-      axios.post("/api/search_carrer/", data).then((res) => {
-        // テストのため返り値をコンソールに表示
-        this.resultLists = res.data;
-        // alert(res.data.success);
-        alert("検索完了");
-      });
+      axios
+        .get("/api/search_carrer/", {
+          params: this.postSkillData,
+        })
+        .then((res) => {
+          this.resultLists = res.data;
+        })
+        .catch((error) => console.log(error));
     },
 
     getResult() {
       axios.get("/api/show-all-user").then((res) => {
-        this.resultLists = res.data; //res.dataで取得。引数に合わせてOK
+        this.resultLists = res.data;
       });
     },
     getSuggestionListTags: function () {
@@ -285,8 +375,24 @@ export default {
         }
       });
     },
+    //選択したスキルに応じて、そのスキルの背景色を変化
+    wordColorChange: function (index) {
+      if (this.postSkillData.length == 0) {
+        return;
+      }
+      //this.postSkillData[0]には何も格納されていない→コントローラー側の都合のため
+      if (this.postSkillData[index + 1]["skillLevel"] == 1) {
+        return "skill-level-1";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 2) {
+        return "skill-level-2";
+      } else if (this.postSkillData[index + 1]["skillLevel"] == 3) {
+        return "skill-level-3";
+      } else {
+        alert("[エラー]ページを再読み込みしてください。");
+        return;
+      }
+    },
   },
-  //mounted()がページを読み込んだ時に行う処理 ※マウントとは、既存のDOM要素をVue.jsが生成するDOM要素で置き換えること。
   mounted() {
     this.getResult();
     this.getSuggestionListTags();
